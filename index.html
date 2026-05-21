@@ -1,1801 +1,1122 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Entrepreneurship in Networked Ecosystems</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Thomas Petzold — Adaptive Knowledge Networks</title>
+<meta name="description" content="Research programme of Prof. Dr. Thomas Petzold on adaptive knowledge networks, network-induced fragmentation, and the integration underdesign of digital systems.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --ink: #0e1623;
-    --paper: #f5f0e8;
-    --accent: #4a6fa5;
-    --accent2: #c0392b;
-    --muted: #6b7a8d;
-    --soft: #e8e2d6;
-    --card: #ffffff;
-    --glow: rgba(74,111,165,0.15);
-    --serif: 'Playfair Display', Georgia, serif;
-    --mono: 'DM Mono', monospace;
-    --sans: 'DM Sans', sans-serif;
-  }
+:root{
+  --paper:oklch(.965 .008 80);
+  --paper-2:oklch(.945 .012 78);
+  --paper-3:oklch(.92 .014 75);
+  --ink:oklch(.16 .012 270);
+  --ink-2:oklch(.30 .012 270);
+  --mid:oklch(.50 .010 270);
+  --dim:oklch(.68 .008 270);
+  --line:oklch(.86 .010 80);
+  --line-2:oklch(.78 .012 80);
+  --signal:oklch(.58 .17 38);
+  --signal-soft:oklch(.92 .04 50);
+  --night:oklch(.18 .013 250);
+  --max:1320px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;background:var(--paper)}
+body{background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;font-weight:400;-webkit-font-smoothing:antialiased;overflow-x:hidden;text-rendering:optimizeLegibility}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:400;letter-spacing:.18em;text-transform:uppercase;color:var(--mid)}
+.eyebrow .num{color:var(--signal);margin-right:14px}
+.kicker{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--signal)}
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:22px 40px;display:flex;justify-content:space-between;align-items:center;transition:background .25s, border-color .25s;border-bottom:1px solid transparent}
+nav.scrolled{background:color-mix(in srgb,var(--paper) 92%, transparent);backdrop-filter:saturate(140%) blur(12px);-webkit-backdrop-filter:saturate(140%) blur(12px);border-bottom-color:var(--line)}
+.brand{font-family:'Instrument Serif',serif;font-size:22px;letter-spacing:-.01em;display:flex;align-items:baseline;gap:10px}
+.brand .dot{width:6px;height:6px;border-radius:50%;background:var(--signal);display:inline-block;transform:translateY(-3px)}
+.brand .dot.pulse{animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:translateY(-3px) scale(1)}50%{opacity:.5;transform:translateY(-3px) scale(.7)}}
+.nav-mid{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--mid);display:flex;gap:24px}
+.nav-mid a{position:relative;padding:4px 0;transition:color .2s}
+.nav-mid a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--signal);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.nav-mid a:hover, .nav-mid a.active{color:var(--ink)}
+.nav-mid a:hover::after, .nav-mid a.active::after{transform:scaleX(1)}
+.nav-cta{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink);border:1px solid var(--ink);padding:9px 14px;transition:all .2s}
+.nav-cta:hover{background:var(--ink);color:var(--paper)}
+.hamb{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px}
+.hamb span{display:block;width:22px;height:1px;background:var(--ink)}
+@media(max-width:1100px){.nav-mid{gap:18px}.nav-mid a{font-size:9.5px}}
+@media(max-width:980px){nav{padding:18px 24px}.nav-mid,.nav-cta{display:none}.hamb{display:flex}}
+.drawer{position:fixed;inset:0;background:var(--paper);z-index:99;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:18px;transform:translateY(-100%);transition:transform .35s ease}
+.drawer.open{transform:none}
+.drawer a{font-family:'Instrument Serif',serif;font-size:42px}
+.drawer a:hover{color:var(--signal)}
+.drawer .close{position:absolute;top:22px;right:24px;background:none;border:none;font-size:30px;color:var(--mid);cursor:pointer}
 
-  body {
-    background: var(--paper);
-    color: var(--ink);
-    font-family: var(--sans);
-    font-weight: 300;
-    line-height: 1.7;
-    overflow-x: hidden;
-  }
+/* PAGES */
+.page{display:none}
+.page.show{display:block}
 
-  /* Grain overlay */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 9999;
-    opacity: 0.4;
-  }
+/* HERO (home) */
+#hero{min-height:100vh;position:relative;display:grid;grid-template-rows:1fr auto;padding:120px 40px 0;border-bottom:1px solid var(--line);overflow:hidden}
+.hero-bg{position:absolute;inset:0;pointer-events:none}
+#net{width:100%;height:100%;display:block;opacity:.85}
+.hero-grid{position:relative;z-index:2;max-width:var(--max);width:100%;margin:0 auto;display:grid;grid-template-columns:1.05fr 1fr;gap:64px;align-items:end;padding-bottom:60px}
+.hero-left .meta-row{display:flex;align-items:center;gap:16px;margin-bottom:34px}
+.hero-left .meta-row .line{flex:0 0 56px;height:1px;background:var(--signal)}
+.hero-name{font-family:'Instrument Serif',serif;font-size:clamp(72px,12vw,184px);line-height:.84;letter-spacing:-.035em;color:var(--ink)}
+.hero-name .last{display:block;font-style:italic;color:var(--ink-2);padding-left:.06em}
+.hero-name .last::after{content:".";color:var(--signal);font-style:normal}
+.hero-role{margin-top:22px;font-size:15px;color:var(--ink-2);max-width:560px;line-height:1.55}
+.hero-role b{font-weight:500;color:var(--ink)}
+.hero-right{display:flex;flex-direction:column;align-items:flex-start;gap:20px;padding-bottom:8px}
+.thesis-card{position:relative;background:color-mix(in srgb,var(--paper) 78%, transparent);backdrop-filter:blur(6px);border:1px solid var(--line);padding:28px 30px 30px;width:100%;max-width:520px}
+.thesis-card::before{content:"";position:absolute;top:-1px;left:-1px;width:32px;height:32px;border-top:1px solid var(--signal);border-left:1px solid var(--signal)}
+.thesis-card::after{content:"";position:absolute;bottom:-1px;right:-1px;width:32px;height:32px;border-bottom:1px solid var(--signal);border-right:1px solid var(--signal)}
+.thesis-card .label{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.thesis-card .label .l{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--signal)}
+.thesis-card .label .r{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--mid)}
+.thesis-q{font-family:'Instrument Serif',serif;font-size:clamp(28px,3.4vw,44px);line-height:1.05;letter-spacing:-.015em;color:var(--ink)}
+.thesis-q em{font-style:italic;color:var(--signal)}
+.thesis-q .strike{position:relative;display:inline-block}
+.thesis-q .strike::after{content:"";position:absolute;left:-2%;right:-2%;top:54%;height:4px;background:var(--signal);transform:scaleX(.96);opacity:.92}
+.thesis-foot{margin-top:22px;font-size:14px;color:var(--ink-2);line-height:1.65;border-top:1px solid var(--line);padding-top:18px}
+.thesis-foot b{font-weight:500;color:var(--ink)}
+.hero-strip{position:relative;z-index:2;border-top:1px solid var(--line);background:color-mix(in srgb,var(--paper) 88%, transparent);backdrop-filter:blur(4px)}
+.hero-strip-inner{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);}
+.hs-cell{padding:18px 28px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:4px}
+.hs-cell:last-child{border-right:none}
+.hs-cell .k{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--mid)}
+.hs-cell .v{font-family:'Instrument Serif',serif;font-size:26px;line-height:1.1;color:var(--ink);letter-spacing:-.01em}
+.hs-cell .v .small{font-size:14px;color:var(--mid);margin-left:4px}
+.hs-cell.live .v::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--signal);margin-right:8px;transform:translateY(-3px);animation:pulse 2.4s ease-in-out infinite}
+@media(max-width:980px){
+  #hero{padding:96px 24px 0}
+  .hero-grid{grid-template-columns:1fr;gap:36px;padding-bottom:36px}
+  .hero-strip-inner{grid-template-columns:repeat(2,1fr)}
+  .hs-cell{border-bottom:1px solid var(--line)}
+  .hs-cell:nth-child(even){border-right:none}
+}
 
-  /* HEADER */
-  header {
-    background: var(--ink);
-    color: var(--paper);
-    padding: 60px 40px 50px;
-    position: relative;
-    overflow: hidden;
-  }
-  header::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent));
-  }
-  .header-label {
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
-    color: var(--accent);
-    text-transform: uppercase;
-    margin-bottom: 18px;
-  }
-  header h1 {
-    font-family: var(--serif);
-    font-size: clamp(2.2rem, 5vw, 4rem);
-    font-weight: 400;
-    line-height: 1.15;
-    max-width: 700px;
-    color: var(--paper);
-  }
-  header h1 em {
-    color: var(--accent);
-    font-style: italic;
-  }
-  .header-sub {
-    margin-top: 18px;
-    font-size: 0.95rem;
-    color: rgba(245,240,232,0.6);
-    max-width: 560px;
-    font-weight: 300;
-  }
-  .header-bg-text {
-    position: absolute;
-    right: -20px;
-    top: -10px;
-    font-family: var(--serif);
-    font-size: 12rem;
-    color: rgba(255,255,255,0.03);
-    pointer-events: none;
-    line-height: 1;
-  }
+/* PAGE HEROES (subpages) */
+.subhero{padding:160px 40px 60px;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+.subhero .inner{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:end}
+.subhero .eyebrow{margin-bottom:24px;display:flex;align-items:center;gap:14px}
+.subhero .eyebrow::before{content:"";width:40px;height:1px;background:var(--signal)}
+.subhero h1{font-family:'Instrument Serif',serif;font-size:clamp(56px,8vw,128px);line-height:.88;letter-spacing:-.03em;color:var(--ink)}
+.subhero h1 em{font-style:italic;color:var(--signal)}
+.subhero .dek{font-family:'Instrument Serif',serif;font-style:italic;font-size:clamp(20px,2.2vw,28px);line-height:1.35;color:var(--mid);letter-spacing:-.005em;max-width:560px}
+@media(max-width:900px){.subhero{padding:120px 24px 40px}.subhero .inner{grid-template-columns:1fr;gap:24px}}
 
-  /* NAV */
-  nav {
-    background: var(--ink);
-    padding: 0 40px;
-    display: flex;
-    gap: 0;
-    overflow-x: auto;
-    scrollbar-width: none;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-  }
-  nav::-webkit-scrollbar { display: none; }
-  .nav-btn {
-    font-family: var(--mono);
-    font-size: 0.68rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(245,240,232,0.45);
-    background: none;
-    border: none;
-    padding: 14px 18px;
-    cursor: pointer;
-    white-space: nowrap;
-    border-bottom: 2px solid transparent;
-    transition: all 0.2s;
-  }
-  .nav-btn:hover { color: var(--paper); }
-  .nav-btn.active {
-    color: var(--accent);
-    border-bottom-color: var(--accent);
-  }
+/* SECTION SHELL */
+.section{padding:96px 40px;border-bottom:1px solid var(--line);position:relative}
+.section .inner{max-width:var(--max);margin:0 auto}
+.section-head{display:grid;grid-template-columns:1fr 1.2fr;gap:48px;align-items:end;margin-bottom:64px}
+.section-head .left .eyebrow{margin-bottom:36px;display:flex;align-items:center;gap:10px}
+.section-head .left .eyebrow::after{content:"";flex:1;max-width:80px;height:1px;background:var(--line)}
+.section-title{font-family:'Instrument Serif',serif;font-size:clamp(48px,6.4vw,96px);line-height:.94;letter-spacing:-.03em;color:var(--ink)}
+.section-title em{font-style:italic;color:var(--signal)}
+.section-head .right{font-size:16px;line-height:1.65;color:var(--ink-2);max-width:560px;justify-self:end;font-weight:400}
+.section-head .right b{color:var(--ink);font-weight:500}
+@media(max-width:900px){.section{padding:64px 24px}.section-head{grid-template-columns:1fr;gap:24px;margin-bottom:40px}.section-head .right{justify-self:start}}
 
-  /* MAIN CONTENT */
-  main {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 50px 30px 80px;
-  }
+/* CURRENT HIGHLIGHTS */
+.highlights{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--ink);border-left:1px solid var(--line)}
+.hl-card{padding:32px 30px 36px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--paper);position:relative;transition:background .25s}
+.hl-card:hover{background:var(--paper-2)}
+.hl-card .hl-tag{display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--signal);margin-bottom:18px}
+.hl-card .hl-tag::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--signal);animation:pulse 2.4s ease-in-out infinite}
+.hl-card .hl-venue{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--mid);margin-bottom:14px}
+.hl-card h4{font-family:'Instrument Serif',serif;font-size:clamp(22px,2vw,28px);line-height:1.18;letter-spacing:-.01em;color:var(--ink);margin-bottom:14px}
+.hl-card h4 em{font-style:italic;color:var(--signal)}
+.hl-card .hl-meta{font-size:13.5px;line-height:1.65;color:var(--mid)}
+.hl-card .hl-meta b{font-weight:500;color:var(--ink-2)}
+@media(max-width:760px){.highlights{grid-template-columns:1fr}}
 
-  .section { display: none; animation: fadeIn 0.35s ease; }
-  .section.active { display: block; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+/* HOME STATEMENT */
+.statement{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.t-card{padding:32px 30px 36px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--paper);transition:background .2s}
+.t-card:hover{background:var(--paper-2)}
+.t-card .num{font-family:'Instrument Serif',serif;font-style:italic;font-size:64px;color:var(--signal);line-height:1;display:block;margin-bottom:14px}
+.t-card .title{font-family:'Instrument Serif',serif;font-size:28px;line-height:1.1;letter-spacing:-.01em;color:var(--ink);margin-bottom:14px}
+.t-card .body{font-size:14px;line-height:1.65;color:var(--ink-2)}
+.t-card .body b{color:var(--ink);font-weight:500}
+@media(max-width:980px){.statement{grid-template-columns:1fr}}
 
-  /* SECTION HEADERS */
-  .section-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 24px;
-    margin-bottom: 40px;
-    padding-bottom: 30px;
-    border-bottom: 1px solid var(--soft);
-  }
-  .section-number {
-    font-family: var(--mono);
-    font-size: 3.5rem;
-    color: var(--soft);
-    line-height: 1;
-    flex-shrink: 0;
-    margin-top: -4px;
-  }
-  .section-title h2 {
-    font-family: var(--serif);
-    font-size: clamp(1.6rem, 3vw, 2.4rem);
-    font-weight: 400;
-    line-height: 1.2;
-    color: var(--ink);
-  }
-  .section-title p {
-    margin-top: 8px;
-    color: var(--muted);
-    font-size: 0.9rem;
-  }
+/* HOME CARDS */
+.home-cards{margin-top:64px;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--ink)}
+.hc{padding:24px 22px 28px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:10px;background:var(--paper);transition:background .25s;position:relative}
+.hc:last-child{border-right:none}
+.hc:hover{background:var(--paper-2)}
+.hc .num{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;color:var(--signal);text-transform:uppercase}
+.hc h4{font-family:'Instrument Serif',serif;font-size:22px;line-height:1.15;letter-spacing:-.005em}
+.hc p{font-size:14px;color:var(--mid);line-height:1.55}
+.hc .arr{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);margin-top:auto;padding-top:14px;display:flex;align-items:center;gap:6px}
+.hc .arr::after{content:"→";transition:transform .25s}
+.hc:hover .arr::after{transform:translateX(4px)}
+@media(max-width:980px){.home-cards{grid-template-columns:repeat(2,1fr)}.hc:nth-child(2n){border-right:none}}
+@media(max-width:560px){.home-cards{grid-template-columns:1fr}.hc{border-right:none}}
 
-  /* CONCEPT GRID */
-  .concept-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-    margin-bottom: 40px;
-  }
-  .concept-card {
-    background: var(--card);
-    border: 1px solid var(--soft);
-    border-radius: 4px;
-    padding: 24px;
-    position: relative;
-    transition: transform 0.2s, box-shadow 0.2s;
-    cursor: default;
-  }
-  .concept-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
-  }
-  .concept-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 3px;
-    height: 100%;
-    background: var(--accent);
-    border-radius: 4px 0 0 4px;
-  }
-  .concept-card.red::before { background: var(--accent2); }
-  .concept-card.green::before { background: #27ae60; }
-  .card-label {
-    font-family: var(--mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 10px;
-  }
-  .concept-card.red .card-label { color: var(--accent2); }
-  .concept-card.green .card-label { color: #27ae60; }
-  .card-title {
-    font-family: var(--serif);
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: var(--ink);
-    margin-bottom: 10px;
-  }
-  .card-body {
-    font-size: 0.87rem;
-    color: #444;
-    line-height: 1.6;
-  }
-  .card-cite {
-    margin-top: 14px;
-    font-family: var(--mono);
-    font-size: 0.68rem;
-    color: var(--muted);
-    border-top: 1px solid var(--soft);
-    padding-top: 10px;
-  }
+/* RESEARCH PROGRAMME */
+.rp-section{padding:48px 0;border-bottom:1px solid var(--line)}
+.rp-section:last-child{border-bottom:none}
+.rp-grid{display:grid;grid-template-columns:220px 1fr;gap:48px}
+.rp-lab{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--signal);padding-top:6px}
+.rp-grid h2{font-family:'Instrument Serif',serif;font-size:clamp(36px,4.4vw,60px);line-height:1.02;letter-spacing:-.012em;margin-bottom:22px;color:var(--ink)}
+.rp-grid h2 em{font-style:italic;color:var(--signal)}
+.rp-grid p{max-width:62ch;color:var(--ink-2);line-height:1.65;font-size:16px;margin-bottom:14px}
+.rp-grid p:last-child{margin-bottom:0}
+.rp-grid p strong{font-weight:500;color:var(--ink)}
+.rp-grid p em{font-style:italic}
+.lede{font-family:'Instrument Serif',serif;font-size:clamp(22px,2.4vw,30px);line-height:1.4;color:var(--ink);font-weight:400;letter-spacing:-.005em;margin-bottom:22px;max-width:62ch}
+.lede em{color:var(--signal);font-style:italic}
+@media(max-width:760px){.rp-grid{grid-template-columns:1fr;gap:14px}}
 
-  /* QUOTE BLOCK */
-  .pull-quote {
-    border-left: 4px solid var(--accent);
-    padding: 20px 28px;
-    margin: 30px 0;
-    background: var(--glow);
-    border-radius: 0 4px 4px 0;
-  }
-  .pull-quote p {
-    font-family: var(--serif);
-    font-size: 1.2rem;
-    font-style: italic;
-    color: var(--ink);
-    line-height: 1.6;
-  }
-  .pull-quote cite {
-    display: block;
-    margin-top: 10px;
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    color: var(--muted);
-    font-style: normal;
-    letter-spacing: 0.1em;
-  }
+.fields{margin-top:24px;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--ink)}
+.field{padding:24px 22px 28px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.field:last-child{border-right:none}
+.field .n{font-family:'Instrument Serif',serif;font-style:italic;font-size:42px;color:var(--signal);line-height:1;margin-bottom:10px}
+.field h4{font-family:'Instrument Serif',serif;font-size:24px;letter-spacing:-.005em;line-height:1.15;margin-bottom:10px;color:var(--ink)}
+.field p{font-size:14px;color:var(--mid);line-height:1.6;max-width:none}
+@media(max-width:780px){.fields{grid-template-columns:1fr}.field{border-right:none}}
 
-  /* TWO COLUMN */
-  .two-col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 28px;
-    margin: 28px 0;
-  }
-  @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+/* ENDORSEMENT */
+#endorse{background:var(--night);padding:128px 40px;border-bottom:none;color:#fff;position:relative;overflow:hidden}
+#endorse .bg-net{position:absolute;inset:0;opacity:.18;pointer-events:none}
+.endorse-inner{max-width:var(--max);margin:0 auto;position:relative;z-index:2;display:grid;grid-template-columns:1fr 320px;gap:80px;align-items:start}
+.endorse-mark{font-family:'Instrument Serif',serif;font-style:italic;font-size:96px;line-height:.6;color:var(--signal);margin-bottom:-12px;display:block}
+.endorse-q{font-family:'Instrument Serif',serif;font-size:clamp(26px,3vw,40px);line-height:1.3;color:#fff;letter-spacing:-.005em}
+.endorse-q em{font-style:italic;color:color-mix(in srgb,var(--signal) 80%, white)}
+.endorse-meta{padding-top:24px;border-top:1px solid rgba(255,255,255,.18)}
+.endorse-meta .who{font-size:14px;font-weight:500;color:#fff;margin-bottom:8px}
+.endorse-meta .role{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.55);line-height:1.8}
+.endorse-meta .src{margin-top:16px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35)}
+@media(max-width:900px){#endorse{padding:80px 24px}.endorse-inner{grid-template-columns:1fr;gap:36px}}
 
-  .col-box {
-    background: var(--card);
-    border: 1px solid var(--soft);
-    border-radius: 4px;
-    padding: 24px;
-  }
-  .col-box h4 {
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 14px;
-  }
-  .col-box.red h4 { color: var(--accent2); }
-  .col-box ul { list-style: none; }
-  .col-box ul li {
-    font-size: 0.87rem;
-    color: #444;
-    padding: 6px 0;
-    border-bottom: 1px solid var(--soft);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .col-box ul li:last-child { border-bottom: none; }
-  .col-box ul li::before {
-    content: '→';
-    color: var(--accent);
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    flex-shrink: 0;
-  }
-  .col-box.red ul li::before { color: var(--accent2); content: '✕'; }
+/* TRAJECTORY (publications) */
+.trajectory{margin-bottom:56px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.trajectory:last-child{border-bottom:none;margin-bottom:0}
+.traj-head{display:grid;grid-template-columns:60px 1fr;gap:20px;align-items:baseline;padding-bottom:18px;border-bottom:1px solid var(--ink);margin-bottom:0}
+.traj-head .tn{font-family:'Instrument Serif',serif;font-style:italic;font-size:42px;color:var(--signal);line-height:1}
+.traj-head h3{font-family:'Instrument Serif',serif;font-size:clamp(26px,3vw,38px);letter-spacing:-.01em;line-height:1.1;color:var(--ink)}
+.traj-head .sub{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mid);grid-column:2;margin-top:8px}
+.traj-note{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--signal);grid-column:2;margin-top:6px;font-style:italic}
+.pub-row{display:grid;grid-template-columns:80px 1fr 110px;gap:24px;padding:22px 0;border-bottom:1px solid var(--line);align-items:start;transition:background .2s, padding .2s;cursor:pointer}
+.pub-row:hover{background:color-mix(in srgb,var(--paper-2) 55%, transparent);padding-left:10px;padding-right:10px;margin-left:-10px;margin-right:-10px}
+.pub-row .yr{font-family:'Instrument Serif',serif;font-style:italic;font-size:24px;color:var(--signal);line-height:1.1}
+.pub-row .body p{margin:0;line-height:1.5;max-width:none}
+.pub-row .body .t{color:var(--ink);font-weight:500;margin-bottom:4px;font-size:16.5px;line-height:1.4}
+.pub-row .body .a{color:var(--mid);font-size:13.5px;line-height:1.55}
+.pub-row .body .a em{font-style:italic}
+.pub-row .lk{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);text-align:right;cursor:pointer;transition:color .2s;padding-top:4px}
+.pub-row .lk:hover{color:var(--signal)}
+.pub-row .lk::after{content:" ↗"}
+.pub-row.no-link{cursor:default}
+.pub-row.no-link .lk::after{content:""}
+@media(max-width:760px){.pub-row{grid-template-columns:60px 1fr;gap:12px}.pub-row .lk{display:none}.traj-head{grid-template-columns:50px 1fr}}
+.archive-foot{margin-top:32px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mid)}
+.archive-foot a{color:var(--signal);border-bottom:1px solid var(--signal);cursor:pointer;padding-bottom:1px}
 
-  /* NETWORK CANVAS */
-  #networkCanvas {
-    width: 100%;
-    border-radius: 4px;
-    border: 1px solid var(--soft);
-    background: var(--ink);
-    cursor: pointer;
-    display: block;
-  }
-  .canvas-label {
-    font-family: var(--mono);
-    font-size: 0.68rem;
-    color: var(--muted);
-    text-align: center;
-    margin-top: 8px;
-    letter-spacing: 0.1em;
-  }
-  .canvas-controls {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 12px;
-    flex-wrap: wrap;
-  }
-  .ctrl-btn {
-    font-family: var(--mono);
-    font-size: 0.68rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 8px 14px;
-    border: 1px solid var(--soft);
-    background: var(--card);
-    border-radius: 3px;
-    cursor: pointer;
-    transition: all 0.15s;
-    color: var(--ink);
-  }
-  .ctrl-btn:hover, .ctrl-btn.active {
-    background: var(--accent);
-    color: white;
-    border-color: var(--accent);
-  }
+/* PAPERS IN PROGRESS */
+.wp{display:grid;grid-template-columns:110px 1fr 100px;gap:24px;padding:26px 0;border-bottom:1px solid var(--line);align-items:start}
+.wp .stat{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--signal)}
+.wp h4{font-family:'Instrument Serif',serif;font-size:22px;line-height:1.18;letter-spacing:-.005em;margin-bottom:8px;color:var(--ink)}
+.wp .a{font-size:14.5px;color:var(--mid);line-height:1.55;font-style:italic;max-width:62ch}
+.wp .lk{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);text-align:right;padding-top:6px}
+@media(max-width:760px){.wp{grid-template-columns:1fr;gap:8px}.wp .lk{display:none}}
 
-  /* THEORIST TABLE */
-  .theorist-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.87rem;
-    margin: 24px 0;
-  }
-  .theorist-table th {
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--muted);
-    padding: 10px 16px;
-    text-align: left;
-    border-bottom: 2px solid var(--soft);
-  }
-  .theorist-table td {
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--soft);
-    color: #333;
-    vertical-align: top;
-  }
-  .theorist-table tr:hover td { background: var(--glow); }
-  .theorist-name {
-    font-family: var(--serif);
-    font-weight: 700;
-    color: var(--ink);
-    font-size: 0.95rem;
-  }
-  .theorist-year {
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    color: var(--accent);
-  }
+/* ESSAYS */
+.essay{display:grid;grid-template-columns:140px 1fr 100px;gap:24px;padding:28px 0;border-bottom:1px solid var(--line);align-items:start;transition:padding .2s}
+.essay:hover{padding-left:8px}
+.essay .meta{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--mid);line-height:1.7}
+.essay .meta .k{color:var(--signal);display:block;margin-bottom:4px}
+.essay h3{font-family:'Instrument Serif',serif;font-size:26px;line-height:1.18;letter-spacing:-.005em;margin-bottom:8px;color:var(--ink)}
+.essay .dek{font-family:'Instrument Serif',serif;font-style:italic;font-size:17px;color:var(--mid);line-height:1.5;max-width:62ch}
+.essay .lk{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);text-align:right;padding-top:6px}
+@media(max-width:760px){.essay{grid-template-columns:1fr;gap:8px}.essay .lk{display:none}}
 
-  /* BERLIN SECTION */
-  .berlin-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin: 28px 0;
-  }
-  @media (max-width: 640px) { .berlin-grid { grid-template-columns: 1fr; } }
-  .berlin-card {
-    background: var(--ink);
-    color: var(--paper);
-    border-radius: 4px;
-    padding: 24px 20px;
-    position: relative;
-    overflow: hidden;
-  }
-  .berlin-card::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0;
-    width: 100%; height: 2px;
-    background: var(--accent);
-  }
-  .berlin-card h4 {
-    font-family: var(--serif);
-    font-size: 1rem;
-    font-weight: 700;
-    margin-bottom: 8px;
-    color: var(--paper);
-  }
-  .berlin-card p {
-    font-size: 0.82rem;
-    color: rgba(245,240,232,0.6);
-    line-height: 1.55;
-  }
-  .berlin-icon {
-    font-size: 1.5rem;
-    margin-bottom: 12px;
-  }
+/* TALKS */
+.featured-talk{margin-bottom:48px;padding:28px;border:1px solid var(--line);background:var(--paper-2);display:grid;grid-template-columns:1fr 1.3fr;gap:36px;align-items:center;cursor:pointer;transition:border-color .25s}
+.featured-talk:hover{border-color:var(--signal)}
+.featured-talk .ft-mark{font-family:'Instrument Serif',serif;font-style:italic;font-size:14px;color:var(--signal);letter-spacing:.04em;margin-bottom:8px}
+.featured-talk h3{font-family:'Instrument Serif',serif;font-size:34px;line-height:1.1;letter-spacing:-.01em;margin-bottom:10px;color:var(--ink)}
+.featured-talk .dek{font-family:'Instrument Serif',serif;font-style:italic;color:var(--mid);font-size:18px;line-height:1.4}
+.ft-vis{position:relative;background:var(--night);aspect-ratio:16/9;display:flex;align-items:stretch;justify-content:stretch;color:var(--paper);overflow:hidden}
+.ft-vis canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.85}
+.ft-overlay{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:24px 26px;color:#fff}
+.ft-badge{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.22);padding:5px 11px;align-self:flex-start}
+.ft-title{font-family:'Instrument Serif',serif;font-size:clamp(28px,3.6vw,46px);line-height:1;color:#fff;letter-spacing:-.015em}
+.ft-title em{font-style:italic;color:color-mix(in srgb,var(--signal) 80%, white)}
+.ft-bottom{display:flex;justify-content:space-between;align-items:flex-end;gap:18px}
+.ft-hint{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.ft-vis .play{flex-shrink:0;width:54px;height:54px;border-radius:50%;border:1px solid rgba(245,243,238,.4);display:flex;align-items:center;justify-content:center;transition:background .2s, border-color .2s;background:rgba(255,255,255,.08)}
+.ft-vis .play svg{width:16px;height:16px;margin-left:3px;fill:var(--paper)}
+.featured-talk:hover .play{background:var(--signal);border-color:var(--signal)}
+.featured-talk:hover .ft-hint{color:rgba(255,255,255,.85)}
+@media(max-width:760px){.featured-talk{grid-template-columns:1fr;padding:20px}}
 
-  /* SPECTRUM / COMPARE */
-  .spectrum {
-    position: relative;
-    margin: 30px 0;
-    padding: 28px;
-    background: var(--card);
-    border: 1px solid var(--soft);
-    border-radius: 4px;
-  }
-  .spectrum-bar {
-    height: 8px;
-    border-radius: 4px;
-    background: linear-gradient(90deg, var(--accent2), var(--soft), var(--accent));
-    margin: 20px 0;
-    position: relative;
-  }
-  .spectrum-labels {
-    display: flex;
-    justify-content: space-between;
-    font-family: var(--mono);
-    font-size: 0.68rem;
-    color: var(--muted);
-    letter-spacing: 0.08em;
-  }
-  .spectrum-pointer {
-    position: absolute;
-    top: -6px;
-    width: 20px; height: 20px;
-    background: var(--ink);
-    border-radius: 50%;
-    border: 2px solid var(--paper);
-    transform: translateX(-50%);
-    cursor: grab;
-    transition: left 0.3s;
-  }
-  .spectrum h4 {
-    font-family: var(--serif);
-    font-size: 1.05rem;
-    font-weight: 700;
-    margin-bottom: 6px;
-  }
-  .spectrum-desc {
-    font-size: 0.85rem;
-    color: var(--muted);
-    margin-top: 16px;
-    padding: 14px;
-    background: var(--paper);
-    border-radius: 3px;
-    font-family: var(--mono);
-    font-size: 0.78rem;
-  }
+.talk{display:grid;grid-template-columns:140px 1fr 220px 60px;gap:24px;padding:24px 0;border-bottom:1px solid var(--line);align-items:start}
+.talk .when{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mid)}
+.talk .when .yr{color:var(--signal);font-size:13px;display:block;margin-bottom:4px;letter-spacing:.14em}
+.talk h4{font-family:'Instrument Serif',serif;font-size:22px;line-height:1.18;letter-spacing:-.005em;margin-bottom:6px;color:var(--ink)}
+.talk .a{font-size:14px;color:var(--mid);line-height:1.5}
+.talk .v{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;color:var(--mid);line-height:1.7}
+.talk .v span{color:var(--ink);display:block}
+.talk .lk{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);text-align:right;padding-top:4px;cursor:pointer}
+.talk .lk:hover{color:var(--signal)}
+.talk .lk.has::after{content:"↗"}
+@media(max-width:900px){.talk{grid-template-columns:120px 1fr;gap:14px}.talk .v,.talk .lk{display:none}}
 
-  /* FOOTER */
-  footer {
-    background: var(--ink);
-    color: rgba(245,240,232,0.4);
-    text-align: center;
-    padding: 30px;
-    font-family: var(--mono);
-    font-size: 0.68rem;
-    letter-spacing: 0.12em;
-  }
+/* CV */
+.cv-grid{display:grid;grid-template-columns:220px 1fr;gap:48px;padding:36px 0;border-bottom:1px solid var(--line)}
+.cv-grid:last-child{border-bottom:none}
+.cv-grid .lab{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--signal);padding-top:4px}
+.cv-row{display:grid;grid-template-columns:120px 1fr;gap:24px;padding:12px 0;border-bottom:1px dotted var(--line);align-items:baseline}
+.cv-row:last-child{border-bottom:none}
+.cv-row .yr{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;color:var(--mid)}
+.cv-row .desc h4{font-family:'IBM Plex Sans',sans-serif;font-size:16px;font-weight:500;letter-spacing:0;color:var(--ink);margin-bottom:2px}
+.cv-row .desc p{font-size:14px;color:var(--mid);line-height:1.55}
+@media(max-width:760px){.cv-grid{grid-template-columns:1fr;gap:14px}.cv-row{grid-template-columns:80px 1fr;gap:14px}}
 
-  /* TOOLTIP */
-  .tooltip-wrap { position: relative; display: inline-block; }
-  .tooltip-trigger {
-    border-bottom: 1px dashed var(--accent);
-    cursor: help;
-    color: var(--accent);
-  }
-  .tooltip-box {
-    display: none;
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--ink);
-    color: var(--paper);
-    font-size: 0.78rem;
-    padding: 10px 14px;
-    border-radius: 4px;
-    width: 220px;
-    text-align: center;
-    z-index: 100;
-    line-height: 1.5;
-    margin-bottom: 8px;
-    font-family: var(--sans);
-    font-weight: 300;
-  }
-  .tooltip-wrap:hover .tooltip-box { display: block; }
+/* CONTACT */
+.contact-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:64px;align-items:start;padding-top:24px}
+.contact-grid .lede{margin-bottom:18px}
+.contact-grid p{color:var(--ink-2);line-height:1.65;font-size:16px;margin-bottom:14px;max-width:60ch}
+.contact-list{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.contact-list a, .contact-list .row{display:grid;grid-template-columns:120px 1fr 24px;gap:18px;padding:18px 0;border-bottom:1px solid var(--line);align-items:baseline;transition:padding-left .2s, background .2s}
+.contact-list a:hover{padding-left:8px;background:color-mix(in srgb,var(--paper-2) 50%, transparent)}
+.contact-list .lab{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--mid)}
+.contact-list .val{font-family:'Instrument Serif',serif;font-size:22px;letter-spacing:-.005em;color:var(--ink)}
+.contact-list .val em{color:var(--signal);font-style:italic}
+.contact-list .arr{font-family:'IBM Plex Mono',monospace;color:var(--mid);text-align:right;font-size:12px}
+.contact-list a:hover .arr{color:var(--signal)}
+@media(max-width:760px){.contact-grid{grid-template-columns:1fr;gap:32px}}
 
-  /* HIGHLIGHT BOX */
-  .highlight-box {
-    background: linear-gradient(135deg, var(--ink), #1a2a42);
-    color: var(--paper);
-    border-radius: 4px;
-    padding: 28px 32px;
-    margin: 28px 0;
-  }
-  .highlight-box p {
-    font-family: var(--serif);
-    font-size: 1.1rem;
-    font-style: italic;
-    line-height: 1.65;
-    opacity: 0.92;
-  }
-  .highlight-box .tags {
-    margin-top: 16px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .tag {
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    padding: 4px 10px;
-    border: 1px solid rgba(245,240,232,0.2);
-    border-radius: 2px;
-    color: rgba(245,240,232,0.6);
-  }
+/* FOOTER */
+footer{border-top:1px solid var(--line);background:var(--paper);padding-top:48px}
+.foot-in{max-width:var(--max);margin:0 auto;padding:0 40px 32px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:48px}
+.foot-col h5{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink);margin-bottom:14px;font-weight:500}
+.foot-col a, .foot-col p{display:block;margin-bottom:8px;font-size:13px;color:var(--mid);line-height:1.65;transition:color .2s}
+.foot-col a:hover{color:var(--signal)}
+.foot-bot{max-width:var(--max);margin:0 auto;padding:18px 40px;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+@media(max-width:760px){.foot-in{grid-template-columns:1fr;gap:24px;padding:0 24px 32px}.foot-bot{flex-direction:column;gap:8px;padding:18px 24px}}
 
-  /* QUIZ SECTION */
-  .knowledge-check {
-    background: var(--card);
-    border: 1px solid var(--soft);
-    border-radius: 4px;
-    overflow: hidden;
-    margin: 30px 0;
-  }
-  .kc-header {
-    background: var(--ink);
-    color: var(--paper);
-    padding: 16px 24px;
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-  }
-  .kc-body { padding: 24px; }
-  .kc-question {
-    font-family: var(--serif);
-    font-size: 1.05rem;
-    color: var(--ink);
-    margin-bottom: 18px;
-    line-height: 1.5;
-  }
-  .kc-options {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .kc-option {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 16px;
-    border: 1px solid var(--soft);
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: 0.87rem;
-    transition: all 0.15s;
-    background: var(--paper);
-  }
-  .kc-option:hover { border-color: var(--accent); }
-  .kc-option.correct { background: #e8f5e9; border-color: #27ae60; color: #1a5c2a; }
-  .kc-option.wrong { background: #fdecea; border-color: var(--accent2); color: #7b1c1c; }
-  .kc-letter {
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    width: 22px; height: 22px;
-    border-radius: 50%;
-    background: var(--soft);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    font-weight: 400;
-  }
-  .kc-option.correct .kc-letter { background: #27ae60; color: white; }
-  .kc-option.wrong .kc-letter { background: var(--accent2); color: white; }
-  .kc-feedback {
-    margin-top: 16px;
-    padding: 14px;
-    background: var(--glow);
-    border-radius: 3px;
-    font-size: 0.85rem;
-    color: var(--ink);
-    display: none;
-    line-height: 1.6;
-  }
-  .kc-feedback.show { display: block; }
-  .kc-nav {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-    gap: 10px;
-  }
-  .kc-nav button {
-    font-family: var(--mono);
-    font-size: 0.68rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 10px 18px;
-    border: 1px solid var(--soft);
-    background: var(--card);
-    border-radius: 3px;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .kc-nav button:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-  .kc-progress {
-    font-family: var(--mono);
-    font-size: 0.68rem;
-    color: var(--muted);
-    align-self: center;
-  }
-
-  /* INTRO HERO */
-  .intro-visual {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    margin: 32px 0;
-    align-items: start;
-  }
-  @media (max-width: 640px) { .intro-visual { grid-template-columns: 1fr; } }
-
-  .thesis-block {
-    counter-reset: thesis;
-  }
-  .thesis-item {
-    display: flex;
-    gap: 16px;
-    align-items: flex-start;
-    padding: 18px 0;
-    border-bottom: 1px solid var(--soft);
-  }
-  .thesis-item:last-child { border-bottom: none; }
-  .thesis-num {
-    font-family: var(--mono);
-    font-size: 1.4rem;
-    color: var(--soft);
-    flex-shrink: 0;
-    line-height: 1;
-    margin-top: 2px;
-    width: 36px;
-  }
-  .thesis-content h4 {
-    font-family: var(--serif);
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--ink);
-    margin-bottom: 4px;
-  }
-  .thesis-content p {
-    font-size: 0.84rem;
-    color: var(--muted);
-  }
+/* reveal */
+.rv{opacity:0;transform:translateY(18px);transition:opacity .8s ease, transform .8s ease}
+.rv.in{opacity:1;transform:none}
 </style>
 </head>
 <body>
 
-<header>
-  <div class="header-bg-text">N</div>
-  <div class="header-label">An Explorable by Prof. Thomas Petzold Ph.D.</div>
-  <h1>Entrepreneurship in<br><em>Networked Ecosystems</em></h1>
-  <p class="header-sub">An interactive companion to understanding how innovation spreads through real-world network structures — from Berlin's startup scene to global open-source communities.</p>
-</header>
-
-<nav>
-  <button class="nav-btn active" onclick="showSection('intro',this)">01 Introduction</button>
-  <button class="nav-btn" onclick="showSection('ecosystem',this)">02 Ecosystem</button>
-  <button class="nav-btn" onclick="showSection('network-science',this)">03 Network Science</button>
-  <button class="nav-btn" onclick="showSection('diffusion',this)">04 Diffusion</button>
-  <button class="nav-btn" onclick="showSection('berlin',this)">05 Berlin Case</button>
-  <button class="nav-btn" onclick="showSection('strategy',this)">06 Strategy</button>
-  <button class="nav-btn" onclick="showSection('theorists',this)">07 Key Theorists</button>
-  <button class="nav-btn" onclick="showSection('explore',this)">08 Explore</button>
+<nav id="nav">
+  <a href="#/home" class="brand" data-route><span class="dot pulse"></span>Thomas&nbsp;Petzold</a>
+  <div class="nav-mid">
+    <a href="#/home" data-route>Home</a>
+    <a href="#/research" data-route>Research</a>
+    <a href="#/publications" data-route>Publications</a>
+    <a href="#/papers" data-route>Papers&nbsp;in&nbsp;Progress</a>
+    <a href="#/essays" data-route>Essays</a>
+    <a href="#/talks" data-route>Talks</a>
+    <a href="#/cv" data-route>CV</a>
+  </div>
+  <a href="#/contact" data-route class="nav-cta">Contact</a>
+  <button class="hamb" onclick="document.getElementById('drawer').classList.add('open')"><span></span><span></span><span></span></button>
 </nav>
+<div class="drawer" id="drawer">
+  <button class="close" onclick="document.getElementById('drawer').classList.remove('open')">&times;</button>
+  <a href="#/home" data-route>Home</a>
+  <a href="#/research" data-route>Research Programme</a>
+  <a href="#/publications" data-route>Publications</a>
+  <a href="#/papers" data-route>Papers in Progress</a>
+  <a href="#/essays" data-route>Essays</a>
+  <a href="#/talks" data-route>Talks</a>
+  <a href="#/cv" data-route>CV</a>
+  <a href="#/contact" data-route>Contact</a>
+</div>
 
 <main>
 
-  <!-- 01 INTRODUCTION -->
-  <div class="section active" id="intro">
-    <div class="section-header">
-      <div class="section-number">01</div>
-      <div class="section-title">
-        <h2>The Core Thesis</h2>
-        <p>Innovation is not just about ideas — it is about structural positioning.</p>
+<!-- ============ HOME ============ -->
+<article class="page" id="home">
+<section id="hero">
+  <div class="hero-bg"><canvas id="net"></canvas></div>
+  <div class="hero-grid">
+    <div class="hero-left">
+      <div class="meta-row"><span class="line"></span><span class="eyebrow"><span class="num">01</span>Network Scientist · Berlin</span></div>
+      <h1 class="hero-name">Thomas<span class="last">Petzold</span></h1>
+      <p class="hero-role"><b>Professor of Management &amp; Innovation</b>, Media University Berlin · Director of Research, Trust Machines Lab · Working at the intersection of digital networks, knowledge formation, and the institutions that depend on them.</p>
+    </div>
+    <div class="hero-right">
+      <div class="thesis-card">
+        <div class="label"><span class="l">Research thesis</span><span class="r">A_KN / 2007&ndash;</span></div>
+        <p class="thesis-q">Why knowledge<br>does <span class="strike">not</span><br><em>scale.</em></p>
+        <p class="thesis-foot">Digital networks scale connectivity faster than they scale knowledge integration. The mismatch &mdash; <b>network-induced fragmentation</b> &mdash; is the structural problem this work addresses.</p>
+      </div>
+    </div>
+  </div>
+  <div class="hero-strip">
+    <div class="hero-strip-inner">
+      <div class="hs-cell"><span class="k">Publications</span><span class="v">50<span class="small">+</span></span></div>
+      <div class="hs-cell"><span class="k">Years Research</span><span class="v">20<span class="small">+</span></span></div>
+      <div class="hs-cell"><span class="k">Continents</span><span class="v">03</span></div>
+      <div class="hs-cell"><span class="k">Stage</span><span class="v">TEDx</span></div>
+      <div class="hs-cell live"><span class="k">Status</span><span class="v">Active</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-bottom:64px">
+  <div class="inner">
+    <div class="section-head" style="margin-bottom:32px">
+      <div class="left"><span class="eyebrow"><span class="num">·</span>Current Research Highlights</span><h2 class="section-title">Forthcoming<br><em>conference work.</em></h2></div>
+      <div class="right"><p>Two accepted poster contributions advancing the <b>Communication &amp; AI Systems</b> field of the programme &mdash; on network architectures for human–AI interaction, and on conscious agency in interactive AI systems.</p></div>
+    </div>
+
+    <div class="highlights">
+      <article class="hl-card">
+        <div class="hl-tag">Accepted &middot; NetSci 2026</div>
+        <div class="hl-venue">Poster &middot; Cambridge, MA &middot; 1–5 June 2026</div>
+        <h4>From Large Language Models to <em>Large Communication Models</em>: A Network Architecture for Dyadic and Adaptive Human–AI Interaction</h4>
+        <p class="hl-meta"><b>Petzold &amp; Hotz</b> &middot; International School and Conference on Network Science.</p>
+      </article>
+      <article class="hl-card">
+        <div class="hl-tag">Accepted &middot; CogSci 2026</div>
+        <div class="hl-venue">Poster &middot; Rio de Janeiro, BR &middot; 22–25 July 2026</div>
+        <h4>Toward <em>Conscious Agency</em> in Artificial Intelligence: Evaluating and Bridging the Gap Between Phenomenological Principles and Interactive AI Systems</h4>
+        <p class="hl-meta"><b>Hotz &amp; Petzold</b> &middot; Annual Meeting of the Cognitive Science Society.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="inner">
+    <div class="section-head">
+      <div class="left"><span class="eyebrow"><span class="num">I</span>Research statement</span><h2 class="section-title">A central paradox<br>of the <em>digital age.</em></h2></div>
+      <div class="right">
+        <p>Digital systems are increasingly efficient at <b>scaling connections</b>, but increasingly unreliable at producing <b>integrated knowledge</b>. As networks densify and accelerate, information becomes fragmented, decontextualised, and temporally unstable.</p>
+        <p style="margin-top:14px">This is not information overload. It is a <b>structural failure of knowledge formation</b> &mdash; visible across platforms, AI&#8209;mediated communication, and decentralised systems.</p>
       </div>
     </div>
 
-    <div class="intro-visual">
+    <div class="statement">
+      <div class="t-card">
+        <span class="num">i.</span>
+        <h3 class="title">Connectivity scales.<br>Integration does not.</h3>
+        <p class="body">Adding nodes is cheap. <b>Reconciling them into coherent knowledge</b> is super-linear in cost &mdash; and digital networks rarely pay it.</p>
+      </div>
+      <div class="t-card">
+        <span class="num">ii.</span>
+        <h3 class="title">Visibility is not<br>understanding.</h3>
+        <p class="body">Platforms <b>amplify what is seen</b> faster than they integrate what is meant. Reach grows; meaning erodes.</p>
+      </div>
+      <div class="t-card">
+        <span class="num">iii.</span>
+        <h3 class="title">Speed is the enemy<br>of integration.</h3>
+        <p class="body">When information flows accelerate, the <b>knowledge structures built on them</b> become temporally unstable.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:64px;display:grid;grid-template-columns:220px 1fr;gap:48px">
+      <div class="rp-lab">Societal relevance</div>
       <div>
-        <div class="thesis-block">
-          <div class="thesis-item">
-            <div class="thesis-num">01</div>
-            <div class="thesis-content">
-              <h4>Position in Networks</h4>
-              <p>Where you sit in a network determines what information you receive and how much influence you can exert.</p>
+        <p style="font-family:'Instrument Serif',serif;font-size:clamp(22px,2.4vw,30px);line-height:1.4;color:var(--ink);margin-bottom:22px;letter-spacing:-.005em">Modern societies are increasingly unable to transform distributed information into <em style="color:var(--signal);font-style:italic">coherent collective knowledge.</em></p>
+        <p style="color:var(--ink-2);line-height:1.65;margin-bottom:14px;max-width:62ch">Organisational learning, management decision-making, innovation systems, and the institutions that depend on them all rely on integrative capacities that digital infrastructures do not provide by default.</p>
+        <p style="color:var(--ink-2);line-height:1.65;max-width:62ch">Platforms, recommender systems, and generative models <b style="color:var(--ink);font-weight:500">optimise distribution, amplification, and engagement</b> far more strongly than <b style="color:var(--ink);font-weight:500">contextual stabilisation and integration</b>. The result is a digital society that is information-rich and knowledge-fragile. Understanding why &mdash; and what an integrative architecture would look like &mdash; is the long-term object of this programme.</p>
+      </div>
+    </div>
+
+    <div class="home-cards">
+      <a href="#/research" data-route class="hc"><span class="num">01 · Programme</span><h4>Adaptive Knowledge Networks</h4><p>The theoretical framework: paradox, concept, mechanism, fields.</p><span class="arr">Read</span></a>
+      <a href="#/publications" data-route class="hc"><span class="num">02 · Archive</span><h4>Publications</h4><p>Peer-reviewed work, grouped into four research trajectories.</p><span class="arr">Browse</span></a>
+      <a href="#/papers" data-route class="hc"><span class="num">03 · In progress</span><h4>Papers in Progress</h4><p>Current drafts and preprints under the programme.</p><span class="arr">Browse</span></a>
+      <a href="#/talks" data-route class="hc"><span class="num">04 · Public</span><h4>Talks &amp; Lectures</h4><p>Selected appearances across academic, public, and institutional venues.</p><span class="arr">Browse</span></a>
+    </div>
+  </div>
+</section>
+
+<section id="endorse">
+  <canvas class="bg-net" id="net2"></canvas>
+  <div class="endorse-inner">
+    <div>
+      <span class="endorse-mark">&ldquo;</span>
+      <p class="endorse-q">Media and networks are so intertwined that it is virtually impossible to treat them separately. <em>Thomas Petzold's lively book</em> uncovers the impact our exploding understanding of complex networks has on our view of communication systems.</p>
+    </div>
+    <div class="endorse-meta">
+      <div class="who">Prof. Albert-László Barabási</div>
+      <div class="role">Director, Network Science Institute<br>Northeastern University &amp; Harvard<br>Author, <em>Network Science</em></div>
+      <div class="src">On Global Knowledge Dynamics<br>and Social Technology · 2017</div>
+    </div>
+  </div>
+</section>
+</article>
+
+<!-- ============ RESEARCH PROGRAMME ============ -->
+<article class="page" id="research">
+<section class="subhero">
+  <div class="inner">
+    <div>
+      <span class="eyebrow"><span class="num">I.</span>Research Programme</span>
+      <h1>Adaptive Knowledge<br><em>Networks.</em></h1>
+    </div>
+    <p class="dek">A long-term theoretical programme on why digital networks distribute information faster than they integrate it &mdash; and what an integrative architecture would require.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="inner">
+
+    <div class="rp-section">
+      <div class="rp-grid">
+        <div class="rp-lab">§1 The Paradox</div>
+        <div>
+          <h2>Distribution scales.<br>Integration does not.</h2>
+          <p class="lede" style="font-family:'IBM Plex Sans',sans-serif;font-weight:400">Digital systems have progressively solved the problem of <em style="font-style:normal;color:var(--signal)">information distribution</em>&thinsp;&mdash;&thinsp;while leaving the problem of <em style="font-style:normal;color:var(--signal)">knowledge integration</em> structurally underdesigned.</p>
+          <p>Across half a century, the dominant trajectory of digital infrastructure has been the progressive reduction of distribution cost: networks have become denser, faster, more personalised, and more global. The implicit assumption that integration would emerge as a by-product of distribution has not held.</p>
+          <p>What has emerged instead is a digital society in which the supply of information vastly outpaces the institutional, cognitive, and computational capacities required to integrate that information into stable, contextual, and collectively held knowledge.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rp-section">
+      <div class="rp-grid">
+        <div class="rp-lab">§2 The Concept</div>
+        <div>
+          <h2>Integration<br><em>underdesign.</em></h2>
+          <p>The mismatch between distribution and integration is not a contingent failure of any particular platform. It is a <strong>design property</strong> of the systems through which digital society conducts itself. Recommender systems, social platforms, generative models, and decentralised protocols are optimised &mdash; explicitly or implicitly &mdash; for throughput, engagement, and amplification.</p>
+          <p>None of these objectives reward the slow, costly, contextual work of integration: reconciling claims, stabilising meanings, situating knowledge in shared histories, or maintaining the conditions under which distributed information can be turned into something a community can act on.</p>
+          <p>I call this absence <strong>integration underdesign</strong>. It is the central object of the programme.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rp-section">
+      <div class="rp-grid">
+        <div class="rp-lab">§3 The Mechanism</div>
+        <div>
+          <h2>Network-induced<br><em>fragmentation.</em></h2>
+          <p>The mechanism through which integration underdesign manifests is <strong>network-induced fragmentation</strong>: a systematic erosion of the structural conditions of knowledge integration as networks densify, accelerate, and personalise.</p>
+          <p>Fragmentation is not a downstream consequence of bad content or bad actors. It is a property of network architecture under conditions of high distribution and low integrative incentive. Three vectors are central:</p>
+          <p><strong>Density</strong> &mdash; as the number of available pathways grows, the coherence of any individual pathway declines. <strong>Speed</strong> &mdash; as flows accelerate, the temporal stability of knowledge structures degrades. <strong>Personalisation</strong> &mdash; as exposure narrows, the overlap of context required for shared knowledge thins.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rp-section">
+      <div class="rp-grid">
+        <div class="rp-lab">§4 The Fields</div>
+        <div>
+          <h2>Three research<br><em>fields.</em></h2>
+          <p>The programme is organised across three substantive fields. Each examines a distinct site at which network-induced fragmentation is observable, measurable, and consequential &mdash; and at which the broader concerns of <strong>management and innovation dynamics</strong> are at stake.</p>
+          <div class="fields">
+            <div class="field">
+              <div class="n">F1</div>
+              <h4>Knowledge Networks &amp; Cultural Complexity</h4>
+              <p>The structure of global, multilingual, and institutional knowledge systems &mdash; from Wikipedia's inter-language linkage to scientific citation networks &mdash; treated as topological objects whose architecture conditions what can be known and innovated upon.</p>
             </div>
-          </div>
-          <div class="thesis-item">
-            <div class="thesis-num">02</div>
-            <div class="thesis-content">
-              <h4>Access to Communities</h4>
-              <p>The communities you can enter shape your knowledge, trust, and collaborative opportunities.</p>
+            <div class="field">
+              <div class="n">F2</div>
+              <h4>Innovation, Platforms &amp; Organisational Systems</h4>
+              <p>Media platforms, recommender systems, and the organisations and innovation ecosystems built on top of them. How amplification, concentration, and engagement metrics restructure the conditions under which collective understanding, strategic decision-making, and management practice can form.</p>
             </div>
-          </div>
-          <div class="thesis-item">
-            <div class="thesis-num">03</div>
-            <div class="thesis-content">
-              <h4>Structural Bridges</h4>
-              <p>Spanning the gaps between disconnected groups is where competitive advantage and novel ideas emerge.</p>
-            </div>
-          </div>
-          <div class="thesis-item">
-            <div class="thesis-num">04</div>
-            <div class="thesis-content">
-              <h4>Diffusion Dynamics</h4>
-              <p>Understanding how ideas, behaviors, and innovations spread through social fabric determines strategic action.</p>
+            <div class="field">
+              <div class="n">F3</div>
+              <h4>Communication &amp; AI Systems</h4>
+              <p>Human–algorithmic communication, generative AI, and decentralised consensus protocols. How AI-mediated and trust-mediated infrastructures intervene in the formation, stabilisation, and verification of knowledge across institutions and markets.</p>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <div class="rp-section">
+      <div class="rp-grid">
+        <div class="rp-lab">F3 &middot; Current contributions</div>
+        <div>
+          <h2>Current conference<br><em>contributions.</em></h2>
+          <p>Two accepted poster contributions extending the <strong>Communication &amp; AI Systems</strong> field. Both develop the integrative architecture argument toward the design of human&ndash;AI interaction.</p>
+          <div style="margin-top:28px;border-top:1px solid var(--line)">
+            <div style="display:grid;grid-template-columns:100px 1fr;gap:24px;padding:22px 0;border-bottom:1px solid var(--line)">
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--signal);padding-top:4px">NetSci 2026<br><span style="color:var(--mid);letter-spacing:.1em">1–5 June</span></div>
+              <div><p style="font-family:'Instrument Serif',serif;font-size:20px;line-height:1.25;letter-spacing:-.005em;color:var(--ink);margin-bottom:6px">From large language models to large communication models: A network architecture for dyadic and adaptive human&ndash;AI interaction</p><p style="font-size:13.5px;color:var(--mid);line-height:1.55;margin:0;max-width:none">Petzold, T., &amp; Hotz, L. (2026, June 1–5). [Poster presentation]. <em>NetSci 2026: International School and Conference on Network Science</em>, Cambridge, MA, United States.</p></div>
+            </div>
+            <div style="display:grid;grid-template-columns:100px 1fr;gap:24px;padding:22px 0;border-bottom:1px solid var(--line)">
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--signal);padding-top:4px">CogSci 2026<br><span style="color:var(--mid);letter-spacing:.1em">22–25 July</span></div>
+              <div><p style="font-family:'Instrument Serif',serif;font-size:20px;line-height:1.25;letter-spacing:-.005em;color:var(--ink);margin-bottom:6px">Toward conscious agency in artificial intelligence: Evaluating and bridging the gap between phenomenological principles and interactive AI systems</p><p style="font-size:13.5px;color:var(--mid);line-height:1.55;margin:0;max-width:none">Hotz, L., &amp; Petzold, T. (2026, July 22–25). [Poster presentation]. <em>CogSci 2026: Annual Meeting of the Cognitive Science Society</em>, Rio de Janeiro, Brazil.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rp-section">
+      <div class="rp-grid">
+        <div class="rp-lab">§5 Trajectory</div>
+        <div>
+          <h2>What the programme<br><em>produces.</em></h2>
+          <p>The aim of the programme is the development of a theoretical and empirical account of integrative architecture &mdash; the principles under which networks, platforms, and AI systems could be designed and governed so that distribution and integration scale together.</p>
+          <p>Outputs include peer-reviewed publications across the three fields, working papers and essays articulating the framework, applied collaborations with institutions facing concrete integration problems, and teaching at the intersection of network science, management, and innovation.</p>
+          <p style="margin-top:18px"><a href="#/publications" data-route style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--signal);border-bottom:1px solid var(--signal);padding-bottom:2px">See publications by trajectory →</a></p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+</article>
+
+<!-- ============ PUBLICATIONS ============ -->
+<article class="page" id="publications">
+<section class="subhero">
+  <div class="inner">
+    <div>
+      <span class="eyebrow"><span class="num">II.</span>Publications</span>
+      <h1>By research<br><em>trajectory.</em></h1>
+    </div>
+    <p class="dek">Peer-reviewed work, chapters, books, and selected papers grouped into four research trajectories within the Adaptive Knowledge Networks programme.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="inner">
+
+    <div class="trajectory">
+      <div class="traj-head">
+        <div class="tn" style="color:var(--signal)">C</div>
+        <div><h3>Current Conference Contributions</h3></div>
+        <div class="sub">F3 &middot; Communication &amp; AI Systems &middot; 2026 — accepted</div>
       </div>
       <div>
-        <div class="highlight-box">
-          <p>"Economic action is embedded in social networks — it is never purely rational or individual, but always shaped by the relational context in which actors find themselves."</p>
-          <div class="tags">
-            <span class="tag">Granovetter, 1985</span>
-            <span class="tag">Embeddedness</span>
-            <span class="tag">Social Structure</span>
-          </div>
+        <div class="pub-row no-link">
+          <div class="yr">2026</div>
+          <div class="body"><p class="t">From Large Language Models to Large Communication Models: A Network Architecture for Dyadic and Adaptive Human–AI Interaction</p><p class="a">Petzold &amp; Hotz &mdash; [Poster presentation]. <em>NetSci 2026: International School and Conference on Network Science</em>, Cambridge, MA, United States, 1–5 June 2026.</p></div>
+          <div class="lk">NetSci 2026</div>
         </div>
-
-        <div class="pull-quote">
-          <p>Innovation does not scale because of ideas alone. It scales because of structural positioning.</p>
-          <cite>— Core Thesis, Entrepreneurship in Networked Ecosystems</cite>
+        <div class="pub-row no-link">
+          <div class="yr">2026</div>
+          <div class="body"><p class="t">Toward Conscious Agency in Artificial Intelligence: Evaluating and Bridging the Gap Between Phenomenological Principles and Interactive AI Systems</p><p class="a">Hotz &amp; Petzold &mdash; [Poster presentation]. <em>CogSci 2026: Annual Meeting of the Cognitive Science Society</em>, Rio de Janeiro, Brazil, 22–25 July 2026.</p></div>
+          <div class="lk">CogSci 2026</div>
         </div>
       </div>
     </div>
 
-    <div class="concept-grid">
-      <div class="concept-card">
-        <div class="card-label">Foundational Insight</div>
-        <div class="card-title">Networks ≠ Individuals</div>
-        <div class="card-body">Outcomes emerge not from individual traits alone, but from the pattern of relationships between actors. The structure itself generates value — or constraints.</div>
+    <div class="trajectory">
+      <div class="traj-head">
+        <div class="tn">T1</div>
+        <div><h3>Knowledge Networks &amp; Cultural Complexity</h3></div>
+        <div class="sub">F1 · Knowledge systems, multilingual networks, cultural data</div>
       </div>
-      <div class="concept-card red">
-        <div class="card-label">Common Misconception</div>
-        <div class="card-title">Ideas Spread Automatically</div>
-        <div class="card-body">Good ideas do not self-propagate. Adoption depends on social thresholds, peer reinforcement, and network architecture — not just quality of the innovation.</div>
-        <div class="card-cite">Centola, 2010</div>
-      </div>
-      <div class="concept-card green">
-        <div class="card-label">Practical Implication</div>
-        <div class="card-title">Position is Strategy</div>
-        <div class="card-body">Every career move, every community you join, and every relationship you cultivate changes your structural position — and therefore your information access and influence.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 02 ECOSYSTEM -->
-  <div class="section" id="ecosystem">
-    <div class="section-header">
-      <div class="section-number">02</div>
-      <div class="section-title">
-        <h2>What Is an Entrepreneurial Ecosystem?</h2>
-        <p>A structured web of relationships between diverse actors — value emerges from interaction.</p>
-      </div>
-    </div>
-
-    <div class="pull-quote">
-      <p>"Innovation emerges from interaction effects."</p>
-      <cite>— Stam, 2015</cite>
-    </div>
-
-    <p style="margin-bottom: 24px; font-size: 0.95rem; color: #444;">An entrepreneurial ecosystem is <strong>not</strong> simply a collection of firms or startups. It is a structured, interdependent web of actors whose interactions generate emergent value. The key actors include:</p>
-
-    <div class="concept-grid">
-      <div class="concept-card">
-        <div class="card-label">Actors</div>
-        <div class="card-title">Founders & Developers</div>
-        <div class="card-body">The builders who create products and solutions. Their density and proximity to one another shapes how quickly knowledge spreads and collaboration forms.</div>
-      </div>
-      <div class="concept-card">
-        <div class="card-label">Actors</div>
-        <div class="card-title">Investors & Platforms</div>
-        <div class="card-body">Capital providers and platform operators who shape incentive structures, access conditions, and the pace of scaling within the ecosystem.</div>
-      </div>
-      <div class="concept-card">
-        <div class="card-label">Actors</div>
-        <div class="card-title">Universities & Communities</div>
-        <div class="card-body">Knowledge producers and social fabric. Universities can function as <em>bridge nodes</em> — gateways connecting external talent to local opportunity networks.</div>
-        <div class="card-cite">Burt, 1992</div>
-      </div>
-      <div class="concept-card">
-        <div class="card-label">Actors</div>
-        <div class="card-title">Regulators & Cultural Norms</div>
-        <div class="card-body">Institutional actors set the rules of the game. Cultural norms (e.g., attitudes toward failure, openness to sharing) shape behavioral patterns across the ecosystem.</div>
-      </div>
-    </div>
-
-    <div class="two-col">
-      <div class="col-box">
-        <h4>What Cluster Density Enables</h4>
-        <ul>
-          <li>Faster information flow speed</li>
-          <li>Accelerated trust formation</li>
-          <li>More frequent collaboration</li>
-          <li>Serendipitous knowledge exchange</li>
-        </ul>
-      </div>
-      <div class="col-box red">
-        <h4>The Structural Risk of Density</h4>
-        <ul>
-          <li>Homogeneity of ideas</li>
-          <li>Echo chamber formation</li>
-          <li>Limited external reach</li>
-          <li>Reduced perspective diversity</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="highlight-box">
-      <p>Successful ecosystems balance natural cohesion (driven by homophily and trust) with intentional diversity (driven by strategic brokerage). Innovation thrives at the intersection of dense clusters and strategic bridges.</p>
-      <div class="tags">
-        <span class="tag">Porter, 1998</span>
-        <span class="tag">McPherson et al., 2001</span>
-        <span class="tag">Burt, 1992</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- 03 NETWORK SCIENCE -->
-  <div class="section" id="network-science">
-    <div class="section-header">
-      <div class="section-number">03</div>
-      <div class="section-title">
-        <h2>Network Science Fundamentals</h2>
-        <p>The building blocks that determine how information and influence travel.</p>
-      </div>
-    </div>
-
-    <div class="concept-grid">
-      <div class="concept-card">
-        <div class="card-label">Building Block</div>
-        <div class="card-title">Nodes</div>
-        <div class="card-body">Individual actors within the system — founders, developers, investors, or institutions. Each node has different properties: degree (number of connections), centrality, and cluster membership.</div>
-      </div>
-      <div class="concept-card">
-        <div class="card-label">Building Block</div>
-        <div class="card-title">Ties (Edges)</div>
-        <div class="card-body">The relationships connecting nodes. Ties vary in <em>strength</em> (weak vs. strong), <em>direction</em>, and <em>frequency</em>. Their pattern determines what flows through the network — and how fast.</div>
-        <div class="card-cite">Granovetter, 1973</div>
-      </div>
-      <div class="concept-card green">
-        <div class="card-label">Key Concept</div>
-        <div class="card-title">Weak Ties</div>
-        <div class="card-body">Counter-intuitively, weak ties (acquaintances, peripheral contacts) are more valuable than strong ties for accessing <strong>novel information</strong> and enabling <strong>career mobility</strong>. Strong ties create redundancy; weak ties create reach.</div>
-        <div class="card-cite">Granovetter, 1973</div>
-      </div>
-      <div class="concept-card">
-        <div class="card-label">Key Concept</div>
-        <div class="card-title">Centrality</div>
-        <div class="card-body">Nodes are not equal. Centrality measures how important a node is in the network. High-centrality nodes have disproportionate structural importance and higher potential diffusion power. Networks follow <strong>power-law distributions</strong>: a few hubs dominate.</div>
-        <div class="card-cite">Barabási & Albert, 1999</div>
-      </div>
-      <div class="concept-card red">
-        <div class="card-label">Key Concept</div>
-        <div class="card-title">Homophily</div>
-        <div class="card-body">The tendency to connect with similar others ("birds of a feather flock together"). Homophily is the primary driver of cluster formation — and, when unchecked, of echo chambers and reduced diversity.</div>
-        <div class="card-cite">McPherson et al., 2001</div>
-      </div>
-      <div class="concept-card green">
-        <div class="card-label">Key Concept</div>
-        <div class="card-title">Structural Holes</div>
-        <div class="card-body">Gaps between clusters where no connection exists. Actors who <em>bridge</em> structural holes become brokers — gaining access to non-redundant information from multiple worlds and accumulating competitive advantage.</div>
-        <div class="card-cite">Burt, 1992</div>
-      </div>
-    </div>
-
-    <div class="spectrum">
-      <h4>Network Architecture: Centralized ↔ Distributed</h4>
-      <p style="font-size:0.85rem; color:var(--muted); margin-top:6px;">Explore how network structure affects resilience and vulnerability.</p>
-      <div class="spectrum-bar">
-        <div class="spectrum-pointer" id="archPointer" style="left: 20%;" onmousedown="startDrag(event)"></div>
-      </div>
-      <div class="spectrum-labels">
-        <span>Centralized<br>(Hub-and-spoke)</span>
-        <span style="text-align:center">Hybrid<br>(Small-world)</span>
-        <span style="text-align:right">Distributed<br>(Decentralized)</span>
-      </div>
-      <div class="spectrum-desc" id="archDesc">
-        <strong>Centralized:</strong> Highly efficient for coordination, but extremely fragile. A single hub failure can collapse the entire system. Influence is concentrated in very few nodes.
-      </div>
-    </div>
-
-    <div class="pull-quote">
-      <p>"Distributed systems are more resilient to targeted attacks."</p>
-      <cite>— Barabási, 2002</cite>
-    </div>
-
-    <div class="two-col">
-      <div class="col-box">
-        <h4>Bridges Enable</h4>
-        <ul>
-          <li>Innovation across domains</li>
-          <li>Access to diverse information</li>
-          <li>Cross-pollination of ideas</li>
-          <li>Brokerage opportunities</li>
-        </ul>
-      </div>
-      <div class="col-box">
-        <h4>Power-Law Distributions Imply</h4>
-        <ul>
-          <li>Few nodes hold disproportionate influence</li>
-          <li>Central actors matter strategically</li>
-          <li>Networks are not democratic by default</li>
-          <li>Seeding strategy depends on hub access</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <!-- 04 DIFFUSION -->
-  <div class="section" id="diffusion">
-    <div class="section-header">
-      <div class="section-number">04</div>
-      <div class="section-title">
-        <h2>Diffusion & Thresholds</h2>
-        <p>How individual choices aggregate into large-scale network phenomena.</p>
-      </div>
-    </div>
-
-    <div class="two-col">
-      <div class="col-box">
-        <h4>Simple Contagion</h4>
-        <ul>
-          <li>Spreads through any single contact</li>
-          <li>A single influencer can trigger adoption</li>
-          <li>Common for viral memes, basic information</li>
-          <li>Weak ties are sufficient for spread</li>
-        </ul>
-      </div>
-      <div class="col-box">
-        <h4>Complex Contagion</h4>
-        <ul>
-          <li>Requires multiple reinforcing signals</li>
-          <li>Operates through threshold dynamics</li>
-          <li>Common for behaviors, norms, innovations</li>
-          <li>Dense clusters accelerate internal adoption</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="pull-quote">
-      <p>"Complex contagion requires multiple sources of reinforcement to trigger adoption cascades."</p>
-      <cite>— Centola, 2010</cite>
-    </div>
-
-    <p style="margin-bottom:24px; font-size:0.95rem; color:#444;">Diffusion in networks depends critically on <strong>social thresholds</strong> and <strong>peer reinforcement</strong> — not purely on technical superiority or randomness. You adopt a behavior when enough people around you already have.</p>
-
-    <div class="concept-grid">
-      <div class="concept-card">
-        <div class="card-label">Schelling, 1971</div>
-        <div class="card-title">Emergent Segregation</div>
-        <div class="card-body">Small individual preferences can produce large-scale segregation and macro-level patterns — even when no individual intends this systemic outcome. Micro-choices aggregate into unexpected macro-structures.</div>
-      </div>
-      <div class="concept-card green">
-        <div class="card-label">Centola, 2010</div>
-        <div class="card-title">Adoption Cascades</div>
-        <div class="card-body">When a critical mass adopts, network-wide growth accelerates rapidly. Visibility within the network is crucial — individuals adopt more readily when they observe multiple peers already participating.</div>
-      </div>
-      <div class="concept-card">
-        <div class="card-label">Marketing Implication</div>
-        <div class="card-title">Seeding Strategy</div>
-        <div class="card-body">Identifying high-centrality nodes helps to <strong>accelerate diffusion</strong> and <strong>optimize seeding strategies</strong>. Targeting hubs produces faster adoption than random seeding — but complex contagion may require cluster-focused seeding.</div>
-      </div>
-    </div>
-
-    <div class="highlight-box">
-      <p>Macro-patterns emerge from micro-preferences. A Schelling model shows that even mild preferences for similarity — not radical segregationist intent — can produce highly polarized, segregated structures at the systemic level.</p>
-      <div class="tags">
-        <span class="tag">Schelling, 1971</span>
-        <span class="tag">Emergence</span>
-        <span class="tag">Complex Systems</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- 05 BERLIN -->
-  <div class="section" id="berlin">
-    <div class="section-header">
-      <div class="section-number">05</div>
-      <div class="section-title">
-        <h2>Berlin as a Living Case</h2>
-        <p>A real-world ecosystem illustrating AI, Blockchain & Network Science in practice.</p>
-      </div>
-    </div>
-
-    <div class="pull-quote">
-      <p>"Geographic and social proximity accelerate knowledge spillovers."</p>
-      <cite>— Audretsch & Feldman, 1996</cite>
-    </div>
-
-    <p style="margin-bottom:24px; font-size:0.95rem; color:#444;">Berlin's distinctive feature is <strong>access density</strong>: a high concentration of early-stage builders, low gatekeeping, and a strong community culture. This makes it structurally different from ecosystems that are experience-driven rather than proximity-driven.</p>
-
-    <div class="berlin-grid">
-      <div class="berlin-card">
-        <div class="berlin-icon">⬛</div>
-        <h4>High Early-Stage Density</h4>
-        <p>Critical mass for serendipitous encounters and peer learning. Founders can access each other without credential barriers.</p>
-      </div>
-      <div class="berlin-card">
-        <div class="berlin-icon">⬡</div>
-        <h4>Strong Open-Source Presence</h4>
-        <p>Culture of shared building and transparent contribution. Open-source contributors meet offline, creating physical-digital hybrid networks.</p>
-      </div>
-      <div class="berlin-card">
-        <div class="berlin-icon">◎</div>
-        <h4>English-Speaking Communities</h4>
-        <p>Low language friction attracts global talent. International communities reduce isolation from innovation.</p>
-      </div>
-      <div class="berlin-card">
-        <div class="berlin-icon">△</div>
-        <h4>Informal Meetups as Hubs</h4>
-        <p>Decentralized, low-barrier knowledge exchange. Emerging tech is discussed before scaling — early access advantage.</p>
-      </div>
-      <div class="berlin-card">
-        <div class="berlin-icon">○</div>
-        <h4>Low Barriers to Entry</h4>
-        <p>Access earned by participation, not credentials. Anyone can become a node. This enables faster network expansion.</p>
-      </div>
-      <div class="berlin-card">
-        <div class="berlin-icon">◆</div>
-        <h4>Web3 & Sovereign Tech Roots</h4>
-        <p>Ideological alignment with decentralization and privacy shapes the network's architecture toward distributed resilience.</p>
-      </div>
-    </div>
-
-    <div class="concept-grid" style="margin-top:32px;">
-      <div class="concept-card green">
-        <div class="card-label">Open-Source Networks</div>
-        <div class="card-title">Small-World Architecture</div>
-        <div class="card-body">Open-source ecosystems typically exhibit <strong>global collaboration networks</strong> and <strong>small-world structures</strong>: high local clustering with short path lengths. This balances focused depth with broad reach.</div>
-        <div class="card-cite">Barabási, 2002</div>
-      </div>
-      <div class="concept-card">
-        <div class="card-label">University Role</div>
-        <div class="card-title">Bridge Nodes in Ecosystems</div>
-        <div class="card-body">Universities function as structural bridges — gateways to local networks — not peripheral academic institutions. They connect external talent to local ecosystems and enable cross-pollination of knowledge.</div>
-        <div class="card-cite">Burt, 1992</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 06 STRATEGY -->
-  <div class="section" id="strategy">
-    <div class="section-header">
-      <div class="section-number">06</div>
-      <div class="section-title">
-        <h2>Strategic Applications</h2>
-        <p>From career positioning to community design and resilience engineering.</p>
-      </div>
-    </div>
-
-    <div class="concept-grid">
-      <div class="concept-card">
-        <div class="card-label">Career Strategy</div>
-        <div class="card-title">Cluster Depth vs. Bridge Breadth</div>
-        <div class="card-body">Career positioning within networks involves a fundamental choice: go deep into one cluster (expertise, trust, identity) or span multiple clusters (brokerage, diverse information, opportunity discovery). Strategic relationship building is essential; ignoring structural opportunity is costly.</div>
-        <div class="card-cite">Burt, 1992; Granovetter, 1973</div>
-      </div>
-      <div class="concept-card green">
-        <div class="card-label">Community Strategy</div>
-        <div class="card-title">The Small World Synthesis</div>
-        <div class="card-body">The most resilient communities balance internal trust (shared identity, psychological safety, rapid coordination) with external openness (non-redundant information, diverse talent, global reach). This creates "small world" architecture: dense clusters connected by strategic bridges.</div>
-      </div>
-      <div class="concept-card red">
-        <div class="card-label">Risks to Avoid</div>
-        <div class="card-title">Over-Embeddedness</div>
-        <div class="card-body">Cluster over-embeddedness leads to: echo chambers, reduced perspective diversity, and increased structural fragility. Being too embedded in one cluster is not just intellectually limiting — it makes you vulnerable to systemic shocks.</div>
-        <div class="card-cite">Porter, 1998</div>
-      </div>
-      <div class="concept-card">
-        <div class="card-label">Network Resilience</div>
-        <div class="card-title">Distribution & Diversity</div>
-        <div class="card-body">Network resilience increases when systems are <strong>distributed</strong> and <strong>structurally diversified</strong>. Dependence on a single hub creates fragility. Resilient networks have redundant pathways and no single critical failure point.</div>
-        <div class="card-cite">Barabási, 2002</div>
-      </div>
-    </div>
-
-    <div class="pull-quote">
-      <p>"Innovation thrives at the intersection of dense clusters and strategic bridges."</p>
-      <cite>— The Small World Synthesis</cite>
-    </div>
-
-    <div class="two-col">
-      <div class="col-box">
-        <h4>Understanding Network Structure Helps You</h4>
-        <ul>
-          <li>Anticipate diffusion dynamics</li>
-          <li>Position yourself strategically</li>
-          <li>Design more resilient strategies</li>
-          <li>Identify when to act as broker vs. cluster member</li>
-        </ul>
-      </div>
-      <div class="col-box">
-        <h4>Community Before Platform</h4>
-        <ul>
-          <li>Shared identity strengthens network cohesion</li>
-          <li>Internal trust precedes external scaling</li>
-          <li>Community-led growth is more resilient</li>
-          <li>Identity is a structural asset, not just cultural</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <!-- 07 THEORISTS -->
-  <div class="section" id="theorists">
-    <div class="section-header">
-      <div class="section-number">07</div>
-      <div class="section-title">
-        <h2>Key Theorists & Concepts</h2>
-        <p>The scholarly foundations behind networked ecosystem thinking.</p>
-      </div>
-    </div>
-
-    <table class="theorist-table">
-      <thead>
-        <tr>
-          <th>Theorist</th>
-          <th>Core Concept</th>
-          <th>Key Insight</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><div class="theorist-name">Granovetter</div><div class="theorist-year">1973, 1985</div></td>
-          <td>Weak Ties · Embeddedness</td>
-          <td>Weak ties provide novel information and career mobility. Economic action is embedded in social networks — neither purely rational nor purely structural.</td>
-        </tr>
-        <tr>
-          <td><div class="theorist-name">Burt</div><div class="theorist-year">1992</div></td>
-          <td>Structural Holes · Brokerage</td>
-          <td>Gaps between clusters represent opportunities. Individuals who bridge structural holes gain access to diverse information and competitive advantage. Universities are bridge nodes.</td>
-        </tr>
-        <tr>
-          <td><div class="theorist-name">Barabási & Albert</div><div class="theorist-year">1999, 2002</div></td>
-          <td>Scale-Free Networks · Power Laws</td>
-          <td>Networks follow power-law distributions: a few hubs hold disproportionate influence. Distributed systems are more resilient than centralized ones.</td>
-        </tr>
-        <tr>
-          <td><div class="theorist-name">Centola</div><div class="theorist-year">2010</div></td>
-          <td>Complex Contagion · Thresholds</td>
-          <td>Behavioral adoption requires multiple reinforcing signals — not just single exposure. Dense clusters accelerate internal adoption through social reinforcement.</td>
-        </tr>
-        <tr>
-          <td><div class="theorist-name">Schelling</div><div class="theorist-year">1971</div></td>
-          <td>Emergent Segregation</td>
-          <td>Small individual preferences can produce large-scale macro-level patterns (e.g., segregation) — even without any individual intending the systemic outcome.</td>
-        </tr>
-        <tr>
-          <td><div class="theorist-name">McPherson et al.</div><div class="theorist-year">2001</div></td>
-          <td>Homophily</td>
-          <td>Similarity drives clustering. Homophily is a preference for similar others, the primary driver of cluster formation, and a source of potential echo chambers.</td>
-        </tr>
-        <tr>
-          <td><div class="theorist-name">Stam</div><div class="theorist-year">2015</div></td>
-          <td>Entrepreneurial Ecosystems</td>
-          <td>Ecosystems are structured webs of relationships — value emerges from interaction effects between diverse actors, not from individual actors alone.</td>
-        </tr>
-        <tr>
-          <td><div class="theorist-name">Porter</div><div class="theorist-year">1998</div></td>
-          <td>Cluster Theory</td>
-          <td>Geographic clusters increase cohesion and accelerate knowledge spillovers — but risk homogeneity if not balanced with external connections.</td>
-        </tr>
-        <tr>
-          <td><div class="theorist-name">Audretsch & Feldman</div><div class="theorist-year">1996</div></td>
-          <td>Knowledge Spillovers</td>
-          <td>Geographic and social proximity accelerate the spillover of knowledge — physical co-location still matters for tacit knowledge transfer.</td>
-        </tr>
-        <tr>
-          <td><div class="theorist-name">Saxenian</div><div class="theorist-year">1994</div></td>
-          <td>Regional Advantage</td>
-          <td>Innovation clusters thrive on density and informal ties. Silicon Valley's superiority over Route 128 came from open information networks, not just technical talent.</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- 08 EXPLORE (Interactive Network) -->
-  <div class="section" id="explore">
-    <div class="section-header">
-      <div class="section-number">08</div>
-      <div class="section-title">
-        <h2>Interactive Network Explorer</h2>
-        <p>Visualize key network concepts and test your understanding.</p>
-      </div>
-    </div>
-
-    <div class="canvas-controls">
-      <button class="ctrl-btn active" id="btn-clusters" onclick="setMode('clusters')">Clusters & Homophily</button>
-      <button class="ctrl-btn" id="btn-bridges" onclick="setMode('bridges')">Structural Holes</button>
-      <button class="ctrl-btn" id="btn-centrality" onclick="setMode('centrality')">Centrality & Hubs</button>
-      <button class="ctrl-btn" id="btn-diffusion" onclick="setMode('diffusion')">Diffusion Wave</button>
-      <button class="ctrl-btn" id="btn-restart" onclick="restartDiffusion()" style="display:none;margin-left:auto;border-color:var(--accent2);color:var(--accent2)">↺ Restart</button>
-    </div>
-
-    <canvas id="networkCanvas" height="360"></canvas>
-    <p class="canvas-label" id="canvasLabel">Homophily: nodes prefer similar others — driving cluster formation</p>
-
-    <div style="height:24px;"></div>
-
-    <!-- KNOWLEDGE CHECK -->
-    <div class="knowledge-check">
-      <div class="kc-header">◈ Concept Check — Test Your Understanding</div>
-      <div class="kc-body">
-        <div id="kc-container"></div>
-        <div class="kc-nav">
-          <button onclick="prevQuestion()">← Previous</button>
-          <span class="kc-progress" id="kc-progress">1 / 8</span>
-          <button onclick="nextQuestion()">Next →</button>
+      <div>
+        <div class="pub-row" onclick="window.open('https://link.springer.com/book/9781137547927','_blank')">
+          <div class="yr">2017</div>
+          <div class="body"><p class="t">Global Knowledge Dynamics and Social Technology</p><p class="a">Petzold &mdash; <em>Palgrave Macmillan</em> · monograph, endorsed by Prof. Albert-László Barabási</p></div>
+          <div class="lk">Publisher</div>
+        </div>
+        <div class="pub-row" onclick="window.open('https://www.opensym.org/os2014/proceedings-files/p131-petzold.pdf','_blank')">
+          <div class="yr">2014</div>
+          <div class="body"><p class="t">Geographic and Linguistic Normalization</p><p class="a">Petzold &amp; Liao &mdash; in <em>Proceedings of the International Symposium on Open Collaboration (OpenSym '14)</em>, ACM.</p></div>
+          <div class="lk">Proceedings</div>
+        </div>
+        <div class="pub-row" onclick="window.open('https://direct.mit.edu/leon/article-abstract/45/3/270/46783','_blank')">
+          <div class="yr">2012</div>
+          <div class="body"><p class="t">A World Map of Knowledge in the Making</p><p class="a">Petzold, Liao, Hartley &amp; Potts &mdash; Wikipedia's inter-language linkage as a dependency explorer of global knowledge accumulation. <em>Leonardo</em>, 45(3), MIT Press.</p></div>
+          <div class="lk">MIT Press</div>
+        </div>
+        <div class="pub-row" onclick="window.open('https://www.academia.edu/1947691/36_Million_Language_Pairs','_blank')">
+          <div class="yr">2012</div>
+          <div class="body"><p class="t">36 Million Language Pairs</p><p class="a">Petzold &mdash; on the co-evolution of languages and content in the Internet environment. <em>Cultural Science Journal</em>.</p></div>
+          <div class="lk">Open Access</div>
+        </div>
+        <div class="pub-row" onclick="window.open('https://www.semanticscholar.org/paper/Analysing-Geo-linguistic-Dynamics-of-the-World-Wide-Liao-Petzold/ba480d2476f368cbe44ccd0b6e44309c313a1563','_blank')">
+          <div class="yr">2010</div>
+          <div class="body"><p class="t">Analysing Geo-linguistic Dynamics of the World Wide Web</p><p class="a">Liao &amp; Petzold &mdash; cartograms and network analysis applied to the linguistic development of Wikipedia. <em>Cultural Science Journal</em>.</p></div>
+          <div class="lk">Open Access</div>
         </div>
       </div>
     </div>
+
+    <div class="trajectory">
+      <div class="traj-head">
+        <div class="tn">T2</div>
+        <div><h3>Institutional &amp; Platform Dynamics</h3></div>
+        <div class="sub">F2 · Concentration, attention, institutions, innovation</div>
+      </div>
+      <div>
+        <div class="pub-row" onclick="window.open('https://doi.org/10.1080/08997764.2024.2426993','_blank')">
+          <div class="yr">2024</div>
+          <div class="body"><p class="t">Digital Transformation's Impact on Media Concentration and News Diversity</p><p class="a">Knuth, Petzold &amp; Richter &mdash; a network analysis of cross-platform news usage in Germany. <em>Journal of Media Economics</em>.</p></div>
+          <div class="lk">DOI</div>
+        </div>
+        <div class="pub-row" onclick="window.open('https://ssrn.com/abstract=4864128','_blank')">
+          <div class="yr">2024</div>
+          <div class="body"><p class="t">Cross-Platform News Consumption and Competition Dynamics in Germany</p><p class="a">Petzold, Knuth &amp; Richter &mdash; an SSRN working version of the network analysis above. <em>SSRN</em>.</p></div>
+          <div class="lk">SSRN</div>
+        </div>
+        <div class="pub-row no-link">
+          <div class="yr">2022</div>
+          <div class="body"><p class="t">Who Eats Up the Attention? Analysing One Day of Digital News Use in Germany</p><p class="a">Knuth, Petzold &amp; Richter &mdash; conference paper, <em>European Media Management Association (EMMA)</em>, Munich.</p></div>
+          <div class="lk">·</div>
+        </div>
+        <div class="pub-row" onclick="window.open('https://www.tandfonline.com/doi/full/10.1080/16522354.2021.1940735','_blank')">
+          <div class="yr">2021</div>
+          <div class="body"><p class="t">Solution-Oriented Media Management Research</p><p class="a">Petzold &amp; Knuth &mdash; a framework to nurture future impact of the field. <em>Journal of Media Business Studies</em>, 19(4), 240–262.</p></div>
+          <div class="lk">DOI</div>
+        </div>
+        <div class="pub-row" onclick="window.open('https://link.springer.com/book/9783531159683','_blank')">
+          <div class="yr">2008</div>
+          <div class="body"><p class="t">Gewalt in internationalen Fernsehnachrichten</p><p class="a">Petzold &mdash; <em>Springer VS</em> · monograph, endorsed by Prof. Jean Seaton (Official Historian of the BBC).</p></div>
+          <div class="lk">Publisher</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="trajectory">
+      <div class="traj-head">
+        <div class="tn">T3</div>
+        <div><h3>Algorithmic Mediation &amp; AI Systems</h3></div>
+        <div class="sub">F3 · Human–algorithmic communication, computational governance</div>
+      </div>
+      <div>
+        <div class="pub-row" onclick="window.open('https://www.academia.edu/29663172/','_blank')">
+          <div class="yr">2013</div>
+          <div class="body"><p class="t">Go and Stop Them (But Don't Tell Anyone That an Algorithm Said to)</p><p class="a">Humer &amp; Petzold &mdash; monitoring public life in Germany. <em>Media in Transition 8 Conference</em>, Massachusetts Institute of Technology, Boston, 3&ndash;5 May 2013.</p></div>
+          <div class="lk">Open Access</div>
+        </div>
+        <div class="pub-row" onclick="window.open('https://link.springer.com/chapter/10.1057/9781137491268_9','_blank')">
+          <div class="yr">2015</div>
+          <div class="body"><p class="t">Human-Algorithmic Scaffolding</p><p class="a">Petzold &mdash; in de Been &amp; Arora (eds.), <em>Crossroads in New Media, Identity and Law</em>, Palgrave Macmillan. With contributions by Saskia Sassen and Julie Cohen.</p></div>
+          <div class="lk">SpringerLink</div>
+        </div>
+        <div class="pub-row" onclick="window.open('https://www.academia.edu/1947695/','_blank')">
+          <div class="yr">2012</div>
+          <div class="body"><p class="t">The Big Data Upgrade</p><p class="a">Petzold &mdash; new dimensions in data analysis: risks and opportunities. <em>ARC Centre of Excellence for Creative Industries and Innovation</em>.</p></div>
+          <div class="lk">Open Access</div>
+        </div>
+        <div class="pub-row" onclick="window.open('https://www.academia.edu/1947753/Der_Merkel_Algorithmus','_blank')">
+          <div class="yr">2011</div>
+          <div class="body"><p class="t">The Merkel Algorithm</p><p class="a">Petzold &mdash; what Indian search engines reveal about the German Chancellor. <em>Kulturaustausch: Zeitschrift für Internationale Perspektiven</em>, II-III.</p></div>
+          <div class="lk">Open Access</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="trajectory">
+      <div class="traj-head">
+        <div class="tn">T4</div>
+        <div><h3>Trust Infrastructures &amp; Decentralised Systems</h3></div>
+        <div class="sub">F3 · Blockchain, distributed trust, decentralised verification</div>
+        <div class="traj-note">First publication forthcoming &mdash; programme established through the Trust Machines Lab</div>
+      </div>
+      <div>
+        <div class="pub-row" onclick="window.open('https://wirtschaft.hmkw.de/blockchain/en/home_en/','_blank')">
+          <div class="yr">ongoing</div>
+          <div class="body"><p class="t">Trust Machines Lab &mdash; programme overview</p><p class="a">Petzold (Director of Research) &mdash; trust-verification principles in blockchain ecosystems and AI assistants. Applied work on consensus, verification, and decentralised knowledge infrastructures.</p></div>
+          <div class="lk">Lab</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="archive-foot">Selected set &middot; full archive on <a onclick="window.open('https://hmkw.academia.edu/ThomasPetzold','_blank')">Academia.edu ↗</a> &middot; <a onclick="window.open('https://www.researchgate.net/profile/Thomas-Petzold-3','_blank')">ResearchGate ↗</a></p>
   </div>
+</section>
+</article>
+
+<!-- ============ PAPERS IN PROGRESS ============ -->
+<article class="page" id="papers">
+<section class="subhero">
+  <div class="inner">
+    <div>
+      <span class="eyebrow"><span class="num">III.</span>Papers in Progress</span>
+      <h1>Currently<br><em>in draft.</em></h1>
+    </div>
+    <p class="dek">A working agenda of papers developing the Adaptive Knowledge Networks programme. Available on request &mdash; please cite the latest available version.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="inner">
+    <div>
+      <div class="wp">
+        <div class="stat">Draft</div>
+        <div><h4>Integration Underdesign: A Framework for the Digital Mismatch</h4><p class="a">A formal articulation of the central concept of the programme. Defines distribution capacity, integrative capacity, and the conditions under which the two co-scale.</p></div>
+        <div class="lk">Request ↗</div>
+      </div>
+      <div class="wp">
+        <div class="stat">Draft</div>
+        <div><h4>Bottleneck Shift: Distribution, Integration, and the Marginal Economics of Knowledge</h4><p class="a">A theoretical paper on the inversion of the marginal economics of digital knowledge under AI-mediated and decentralised substrates.</p></div>
+        <div class="lk">Request ↗</div>
+      </div>
+      <div class="wp">
+        <div class="stat">Outline</div>
+        <div><h4>Consensus Without Context: Decentralised Verification and the Limits of Trust Machines</h4><p class="a">Joint output of the Trust Machines Lab. Examines whether decentralised consensus protocols can substitute for integrative context &mdash; and where they structurally cannot.</p></div>
+        <div class="lk">Request ↗</div>
+      </div>
+    </div>
+  </div>
+</section>
+</article>
+
+<!-- ============ ESSAYS ============ -->
+<article class="page" id="essays">
+<section class="subhero">
+  <div class="inner">
+    <div>
+      <span class="eyebrow"><span class="num">IV.</span>Essays &amp; Manifestos</span>
+      <h1>Long-form<br><em>arguments.</em></h1>
+    </div>
+    <p class="dek">Essays articulating the framework outside the strictures of the journal article. Forthcoming &mdash; intended as connective tissue between research papers and public discourse.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="inner">
+    <div>
+      <a class="essay">
+        <div class="meta"><span class="k">Manifesto</span>Series I/IV</div>
+        <div><h3>Why Knowledge Does Not Scale</h3><p class="dek">The foundational essay of the programme: a short argument for why distribution and integration are not the same problem, and why digital society has only solved one of them.</p></div>
+        <div class="lk">In progress</div>
+      </a>
+      <a class="essay">
+        <div class="meta"><span class="k">Essay</span>Series II/IV</div>
+        <div><h3>Integration Underdesign</h3><p class="dek">From an observation to a design property: how the absence of integrative incentive shapes the architecture of every platform we build on top of the internet.</p></div>
+        <div class="lk">In progress</div>
+      </a>
+      <a class="essay">
+        <div class="meta"><span class="k">Essay</span>Series III/IV</div>
+        <div><h3>Three Vectors of Fragmentation</h3><p class="dek">Density, speed, personalisation. A walk through the three structural conditions under which network-induced fragmentation becomes observable in the wild.</p></div>
+        <div class="lk">In progress</div>
+      </a>
+      <a class="essay">
+        <div class="meta"><span class="k">Essay</span>Series IV/IV</div>
+        <div><h3>What an Integrative Architecture Would Require</h3><p class="dek">A constructive sketch: not what is wrong with current platforms, but what design principles a digital infrastructure that scales integration alongside distribution would need to satisfy.</p></div>
+        <div class="lk">In progress</div>
+      </a>
+      <a class="essay">
+        <div class="meta"><span class="k">Note</span>Standalone</div>
+        <div><h3>Consensus is not Context</h3><p class="dek">A short note on why decentralised consensus protocols, despite the rhetoric, do not solve the integration problem &mdash; and why mistaking the two has consequences.</p></div>
+        <div class="lk">In progress</div>
+      </a>
+    </div>
+  </div>
+</section>
+</article>
+
+<!-- ============ TALKS ============ -->
+<article class="page" id="talks">
+<section class="subhero">
+  <div class="inner">
+    <div>
+      <span class="eyebrow"><span class="num">V.</span>Talks &amp; Lectures</span>
+      <h1>Public &amp;<br>scholarly <em>talks.</em></h1>
+    </div>
+    <p class="dek">Selected appearances across academic, public, and institutional venues since the inception of the programme.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="inner">
+
+    <div class="featured-talk" onclick="window.open('https://www.youtube.com/watch?v=lj9T8APTCXk','_blank')">
+      <div>
+        <div class="ft-mark">Featured · TEDxBerlin · 2012</div>
+        <h3>36 Million Language Pairs</h3>
+        <p class="dek">The first public articulation of network-induced fragmentation across geolinguistic knowledge networks. Haus der Kulturen der Welt, Berlin.</p>
+      </div>
+      <div class="ft-vis">
+        <canvas id="netTalk"></canvas>
+        <div class="ft-overlay">
+          <div class="ft-badge">TEDxBerlin · 2012</div>
+          <div class="ft-title">36 Million<br><em>Language Pairs.</em></div>
+          <div class="ft-bottom"><span class="ft-hint">Watch on YouTube</span><div class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="talk">
+        <div class="when"><span class="yr">2026</span>Visiting Professorship</div>
+        <div><h4>Entrepreneurship in Networked Ecosystems</h4><p class="a">Lecture series on structural positioning and entrepreneurial outcomes.</p></div>
+        <div class="v"><span>EMLV Business School</span>Paris, FR</div>
+        <div class="lk has" onclick="window.open('https://leproftp.github.io/valueofnets/','_blank')">Course</div>
+      </div>
+
+      <div class="talk">
+        <div class="when"><span class="yr">2023</span>Executive Programme</div>
+        <div><h4>Knowledge Systems in Complex Ecosystems</h4><p class="a">Invited contribution on integration underdesign in sustainability information environments.</p></div>
+        <div class="v"><span>Harvard T.H. Chan School of Public Health</span>Boston, US</div>
+        <div class="lk">·</div>
+      </div>
+
+      <div class="talk">
+        <div class="when"><span class="yr">2022</span>Conference Paper</div>
+        <div><h4>Who Eats Up the Attention?</h4><p class="a">Analysing one day of digital news use in Germany — a network-analytic approach. With Knuth &amp; Richter.</p></div>
+        <div class="v"><span>European Media Management Association</span>Munich, DE</div>
+        <div class="lk">·</div>
+      </div>
+
+      <div class="talk">
+        <div class="when"><span class="yr">2021</span>Keynote</div>
+        <div><h4>Solution-Oriented Research Under Network Conditions</h4><p class="a">On translating fragmentation findings into institutional response.</p></div>
+        <div class="v"><span>European Media Management Association</span>Online</div>
+        <div class="lk">·</div>
+      </div>
+
+      <div class="talk">
+        <div class="when"><span class="yr">2017</span>Book Launch</div>
+        <div><h4>Global Knowledge Dynamics &amp; Social Technology</h4><p class="a">Public conversation around the monograph and the network-theoretic account of knowledge formation.</p></div>
+        <div class="v"><span>Palgrave Macmillan</span>Berlin · London</div>
+        <div class="lk">·</div>
+      </div>
+
+      <div class="talk">
+        <div class="when"><span class="yr">2015</span>Invited Lecture</div>
+        <div><h4>Human-Algorithmic Scaffolding</h4><p class="a">Companion talk to the Palgrave chapter with Sassen &amp; Cohen.</p></div>
+        <div class="v"><span>Erasmus University Rotterdam</span>NL</div>
+        <div class="lk">·</div>
+      </div>
+
+      <div class="talk">
+        <div class="when"><span class="yr">2014</span>Conference Paper</div>
+        <div><h4>Geographic and Linguistic Normalization</h4><p class="a">Petzold &amp; Liao &mdash; methods for cross-language comparison of online knowledge networks.</p></div>
+        <div class="v"><span>OpenSym (ACM)</span>Berlin, DE</div>
+        <div class="lk">·</div>
+      </div>
+
+      <div class="talk">
+        <div class="when"><span class="yr">2012</span>Public Talk</div>
+        <div><h4>36 Million Language Pairs</h4><p class="a">First public articulation of the fragmentation argument.</p></div>
+        <div class="v"><span>TEDxBerlin · HKW</span>Berlin, DE</div>
+        <div class="lk has" onclick="window.open('https://www.youtube.com/watch?v=lj9T8APTCXk','_blank')">YouTube</div>
+      </div>
+
+      <div class="talk">
+        <div class="when"><span class="yr">2011</span>Conference</div>
+        <div><h4>Wikipedia's Inter-Language Linkage as a Dependency Network</h4><p class="a">Presentation of the doctoral work and the Leonardo paper.</p></div>
+        <div class="v"><span>QUT · ARC Centre of Excellence</span>Brisbane, AU</div>
+        <div class="lk">·</div>
+      </div>
+
+      <div class="talk">
+        <div class="when"><span class="yr">2009</span>Fellowship</div>
+        <div><h4>Network Approaches to Digital Knowledge</h4><p class="a">Summer Doctoral Programme contribution.</p></div>
+        <div class="v"><span>Oxford Internet Institute</span>Oxford, UK</div>
+        <div class="lk">·</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+</article>
+
+<!-- ============ CV ============ -->
+<article class="page" id="cv">
+<section class="subhero">
+  <div class="inner">
+    <div>
+      <span class="eyebrow"><span class="num">VI.</span>Curriculum Vitae</span>
+      <h1>Thomas Petzold,<br><em>Ph.D.</em></h1>
+    </div>
+    <p class="dek">Professor of Management &amp; Innovation, Media University Berlin. Director of Research, Trust Machines Lab. A condensed CV is below; full version available on request.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="inner">
+
+    <div class="cv-grid">
+      <div class="lab">Position</div>
+      <div>
+        <div class="cv-row"><div class="yr">2013 – present</div><div class="desc"><h4>Professor of Management &amp; Innovation</h4><p>Media University Berlin · Head of Department of Management and Business Studies</p></div></div>
+        <div class="cv-row"><div class="yr">ongoing</div><div class="desc"><h4>Director of Research, Trust Machines Lab</h4><p>Blockchain ecosystems, generative AI, distributed trust verification</p></div></div>
+      </div>
+    </div>
+
+    <div class="cv-grid">
+      <div class="lab">Visiting positions</div>
+      <div>
+        <div class="cv-row"><div class="yr">2014 – ongoing</div><div class="desc"><h4>Visiting Professor</h4><p>EMLV Business School, Paris (2025–26) · University of Lucerne, Switzerland · European University Viadrina, Frankfurt (Oder) · Berlin School of Economics and Law</p></div></div>
+        <div class="cv-row"><div class="yr">2018 – 2022</div><div class="desc"><h4>Visiting Scientist &mdash; ECRC, Charité Berlin</h4><p>Experimental and Clinical Research Center · Complex Networks in Health Communication</p></div></div>
+        <div class="cv-row"><div class="yr">2009 – 2010</div><div class="desc"><h4>Visiting Researcher &mdash; Oxford Internet Institute &amp; Reuters Institute</h4><p>University of Oxford, UK</p></div></div>
+      </div>
+    </div>
+
+    <div class="cv-grid">
+      <div class="lab">Earlier research</div>
+      <div>
+        <div class="cv-row"><div class="yr">2013 – 2018</div><div class="desc"><h4>Associate Researcher &mdash; Curtin University</h4><p>Centre for Culture and Technology · Perth, Australia</p></div></div>
+        <div class="cv-row"><div class="yr">2011 – 2018</div><div class="desc"><h4>Associate Researcher &mdash; Queensland University of Technology</h4><p>ARC Centre of Excellence for Creative Industries and Innovation · Brisbane, Australia</p></div></div>
+        <div class="cv-row"><div class="yr">2011 – 2013</div><div class="desc"><h4>Postdoctoral Researcher</h4><p>WZB Berlin Social Science Center &amp; ARC CCi · Brisbane</p></div></div>
+      </div>
+    </div>
+
+    <div class="cv-grid">
+      <div class="lab">Education</div>
+      <div>
+        <div class="cv-row"><div class="yr">2023</div><div class="desc"><h4>Executive Programme</h4><p>Harvard University, T.H. Chan School of Public Health, Boston, USA</p></div></div>
+        <div class="cv-row"><div class="yr">2011</div><div class="desc"><h4>Ph.D.</h4><p>Queensland University of Technology, Brisbane, Australia</p></div></div>
+        <div class="cv-row"><div class="yr">2009</div><div class="desc"><h4>Summer Doctoral Programme</h4><p>Oxford Internet Institute, University of Oxford, UK</p></div></div>
+        <div class="cv-row"><div class="yr">2007</div><div class="desc"><h4>M.A.</h4><p>European University Viadrina, Frankfurt (Oder), Germany</p></div></div>
+        <div class="cv-row"><div class="yr">2002</div><div class="desc"><h4>B.A.</h4><p>The Open University, Milton Keynes, UK</p></div></div>
+      </div>
+    </div>
+
+    <div class="cv-grid">
+      <div class="lab">Funding &amp; honours</div>
+      <div>
+        <div class="cv-row"><div class="yr">selection</div><div class="desc"><h4>Research funding</h4><p>VolkswagenStiftung · Australian Research Council · German Academic Exchange Service (DAAD) · Australian Government · private foundations in Germany</p></div></div>
+      </div>
+    </div>
+
+    <div class="cv-grid">
+      <div class="lab">Service</div>
+      <div>
+        <div class="cv-row"><div class="yr">ongoing</div><div class="desc"><h4>Peer Reviewer</h4><p>New Media and Society (SAGE) · Social Science Computer Review (SAGE) · Technological Forecasting and Social Change (Elsevier)</p></div></div>
+        <div class="cv-row"><div class="yr">ongoing</div><div class="desc"><h4>International Board Member</h4><p>Cultural Science Journal</p></div></div>
+        <div class="cv-row"><div class="yr">selection</div><div class="desc"><h4>Co-supervision of doctoral theses</h4><p>TU Berlin · Charité Universitätsmedizin Berlin · University of Music, Drama and Media Hanover</p></div></div>
+      </div>
+    </div>
+
+    <div class="cv-grid">
+      <div class="lab">Geographies</div>
+      <div>
+        <div class="cv-row"><div class="desc" style="grid-column:1/-1"><p style="margin:0">Berlin · Brisbane · Oxford · Boston · Paris · Lucerne · Frankfurt (Oder) · Perth. Three continents, two decades.</p></div></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+</article>
+
+<!-- ============ CONTACT ============ -->
+<article class="page" id="contact">
+<section class="subhero">
+  <div class="inner">
+    <div>
+      <span class="eyebrow"><span class="num">VII.</span>Contact</span>
+      <h1>Correspondence<br>&amp; <em>collaboration.</em></h1>
+    </div>
+    <p class="dek">Open to researchers, organisations, companies, and public institutions working at the intersection of network science, digital knowledge systems, and the structures that depend on them.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="inner">
+    <div class="contact-grid">
+      <div>
+        <p class="lede">Enquiries are welcome from researchers, organisations, companies, and public institutions working on knowledge problems that are, structurally, <em>network problems.</em></p>
+        <p>Particularly interested in applied integrative-architecture work with institutions and firms facing concrete integration challenges, in doctoral supervision within the programme, and in collaborations across management, innovation, media, and decentralised systems.</p>
+        <p style="color:var(--mid);font-size:14px">Berlin, Germany · CET / CEST.</p>
+      </div>
+      <div class="contact-list">
+        <a href="/cdn-cgi/l/email-protection#7e0a500e1b0a0411121a3e131b1a171f530b1017081b0c0d170a07501a1b"><span class="lab">Email</span><span class="val">t.petzold@<em>media-university.de</em></span><span class="arr">↗</span></a>
+        <a href="https://www.linkedin.com/in/tpetzold/" target="_blank" rel="noopener"><span class="lab">Network</span><span class="val"><em>LinkedIn</em> · tpetzold</span><span class="arr">↗</span></a>
+        <a href="https://hmkw.academia.edu/ThomasPetzold" target="_blank" rel="noopener"><span class="lab">Archive</span><span class="val"><em>Academia</em>.edu</span><span class="arr">↗</span></a>
+        <a href="https://www.researchgate.net/profile/Thomas-Petzold-3" target="_blank" rel="noopener"><span class="lab">Archive</span><span class="val"><em>Research</em>Gate</span><span class="arr">↗</span></a>
+        <a href="https://wirtschaft.hmkw.de/blockchain/en/home_en/" target="_blank" rel="noopener"><span class="lab">Lab</span><span class="val">Trust <em>Machines</em></span><span class="arr">↗</span></a>
+        <a href="https://www.media-university.de/en/people/prof-thomas-petzold-ph-d/" target="_blank" rel="noopener"><span class="lab">Faculty</span><span class="val">Media University <em>Berlin</em></span><span class="arr">↗</span></a>
+        <div class="row"><span class="lab">Location</span><span class="val"><em>Berlin</em>, DE · 52.520°N</span><span class="arr"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+</article>
 
 </main>
 
 <footer>
-  An explorable designed by Prof. Thomas Petzold Ph.D. and Claude | 2026
+  <div class="foot-in">
+    <div class="foot-col">
+      <h5>Programme</h5>
+      <a href="#/research" data-route>Adaptive Knowledge Networks</a>
+      <a href="#/research" data-route>Integration Underdesign</a>
+      <a href="#/research" data-route>Network-Induced Fragmentation</a>
+    </div>
+    <div class="foot-col">
+      <h5>Work</h5>
+      <a href="#/publications" data-route>Publications</a>
+      <a href="#/papers" data-route>Papers in Progress</a>
+      <a href="#/essays" data-route>Essays &amp; Manifestos</a>
+      <a href="#/talks" data-route>Talks</a>
+    </div>
+    <div class="foot-col">
+      <h5>Position</h5>
+      <p>Prof. Dr. Thomas Petzold<br>Media University Berlin</p>
+      <p>Director of Research<br>Trust Machines Lab</p>
+      <a href="#/contact" data-route>Contact →</a>
+    </div>
+  </div>
+  <div class="foot-bot">
+    <span>© 2026 Thomas Petzold, Ph.D.</span>
+    <span>Berlin · Brisbane · Oxford · Boston · Paris</span>
+  </div>
 </footer>
 
-<script>
-// === NAVIGATION ===
-function showSection(id, btn) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  if (btn) btn.classList.add('active');
-  if (id === 'explore') {
-    // Double rAF: first frame makes section visible, second measures real offsetWidth
-    requestAnimationFrame(() => requestAnimationFrame(initCanvas));
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+/* nav scroll */
+(function(){const n=document.getElementById('nav');const o=()=>n.classList.toggle('scrolled',window.scrollY>40);window.addEventListener('scroll',o,{passive:true});o()})();
+
+/* hash router */
+(function(){
+  const pages=['home','research','publications','papers','essays','talks','cv','contact'];
+  function route(){
+    let h=(location.hash||'#/home').replace(/^#\//,'')||'home';
+    if(!pages.includes(h))h='home';
+    pages.forEach(p=>{const el=document.getElementById(p);if(el)el.classList.toggle('show',p===h)});
+    document.querySelectorAll('.nav-mid a').forEach(a=>{const t=(a.getAttribute('href')||'').replace(/^#\//,'');a.classList.toggle('active',t===h)});
+    window.scrollTo({top:0,behavior:'instant'});
+    document.getElementById('drawer').classList.remove('open');
   }
-}
+  window.addEventListener('hashchange',route);
+  document.querySelectorAll('a[data-route]').forEach(a=>a.addEventListener('click',()=>setTimeout(route,0)));
+  route();
+})();
 
-// === SPECTRUM DRAG ===
-let dragging = false;
-function startDrag(e) {
-  dragging = true;
-  document.addEventListener('mousemove', onDrag);
-  document.addEventListener('mouseup', stopDrag);
-}
-function onDrag(e) {
-  if (!dragging) return;
-  const bar = document.querySelector('.spectrum-bar');
-  const rect = bar.getBoundingClientRect();
-  let pct = (e.clientX - rect.left) / rect.width;
-  pct = Math.max(0.02, Math.min(0.98, pct));
-  document.getElementById('archPointer').style.left = (pct * 100) + '%';
-  const desc = document.getElementById('archDesc');
-  if (pct < 0.33) {
-    desc.innerHTML = '<strong>Centralized:</strong> Highly efficient for coordination, but extremely fragile. A single hub failure can collapse the entire system. Influence is concentrated in very few nodes. Networks follow power-law distributions here.';
-  } else if (pct < 0.67) {
-    desc.innerHTML = '<strong>Small-World (Hybrid):</strong> The optimal balance. High local clustering (dense, trust-rich communities) connected by a few strategic long-range ties. Open-source ecosystems and Berlin\'s startup scene exhibit this architecture.';
-  } else {
-    desc.innerHTML = '<strong>Distributed:</strong> Maximum resilience — no single critical failure point. Functionality maintained even when multiple nodes fail. Ideologically aligned with Web3, blockchain, and sovereign tech communities.';
-  }
-}
-function stopDrag() { dragging = false; document.removeEventListener('mousemove', onDrag); document.removeEventListener('mouseup', stopDrag); }
+/* reveal */
+(function(){
+  const els=document.querySelectorAll('.section-title,.section-head .right,.t-card,.rp-section,.pub-row,.wp,.essay,.talk,.featured-talk,.endorse-q,.endorse-meta,.cv-grid,.contact-list a,.subhero h1,.subhero .dek');
+  els.forEach(e=>e.classList.add('rv'));
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+  els.forEach(e=>io.observe(e));
+})();
 
-// === NETWORK CANVAS ===
-const canvas = document.getElementById('networkCanvas');
-const ctx = canvas.getContext('2d');
-let networkMode = 'clusters';
-let diffusionStep = 0;
-let canvasReady = false;
-
-// Pre-generated stable node layouts (built once, reused every draw)
-let stableData = {};
-
-function seedRng(seed) {
-  let s = seed;
-  return () => { s = (s * 1664525 + 1013904223) & 0xffffffff; return (s >>> 0) / 0xffffffff; };
-}
-
-function buildStableData(W, H) {
-  // CLUSTERS
-  const rng1 = seedRng(42);
-  const clusterDefs = [
-    { cx: W*0.22, cy: H*0.46, color: '#4a6fa5', n: 8 },
-    { cx: W*0.5,  cy: H*0.3,  color: '#c0392b', n: 7 },
-    { cx: W*0.78, cy: H*0.56, color: '#27ae60', n: 8 }
-  ];
-  const clusterNodes = [];
-  clusterDefs.forEach((c, ci) => {
-    const r = Math.min(W, H) * 0.13;
-    for (let i = 0; i < c.n; i++) {
-      const angle = (i / c.n) * Math.PI * 2;
-      const dist = r * (0.3 + rng1() * 0.7);
-      clusterNodes.push({ x: c.cx + Math.cos(angle)*dist, y: c.cy + Math.sin(angle)*dist, ci, color: c.color });
-    }
-  });
-  const clusterEdges = [];
-  clusterDefs.forEach((_, ci) => {
-    const cn = clusterNodes.filter(n => n.ci === ci);
-    cn.forEach((a, i) => cn.forEach((b, j) => {
-      if (i < j && rng1() < 0.7) clusterEdges.push({ a, b, color: clusterDefs[ci].color + '44' });
-    }));
-  });
-
-  // BRIDGES
-  const rng2 = seedRng(77);
-  const bNodes1 = [], bNodes2 = [];
-  for (let i = 0; i < 7; i++) {
-    const a = (i / 7) * Math.PI * 2;
-    bNodes1.push({ x: W*0.24 + Math.cos(a)*75, y: H*0.52 + Math.sin(a)*70 });
-    bNodes2.push({ x: W*0.76 + Math.cos(a)*75, y: H*0.52 + Math.sin(a)*70 });
-  }
-  const bEdges1 = [], bEdges2 = [];
-  bNodes1.forEach((a, i) => bNodes1.forEach((b, j) => { if (i < j && rng2() < 0.65) bEdges1.push({ a, b }); }));
-  bNodes2.forEach((a, i) => bNodes2.forEach((b, j) => { if (i < j && rng2() < 0.65) bEdges2.push({ a, b }); }));
-  const broker = { x: W*0.5, y: H*0.3 };
-
-  // DIFFUSION grid
-  const cols = 9, rows = 6;
-  const padX = 55, padY = 45;
-  const gw = W - padX*2, gh = H - padY*2;
-  const diffNodes = [];
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      diffNodes.push({ x: padX + (c/(cols-1))*gw, y: padY + (r/(rows-1))*gh, id: r*cols+c, row: r, col: c });
-    }
-  }
-  // Seed with 2×2 block in center so threshold-2 spread actually works
-  const cr = Math.floor(rows/2) - 1, cc = Math.floor(cols/2) - 1;
-  const diffSeeds = [
-    cr*cols+cc, cr*cols+cc+1,
-    (cr+1)*cols+cc, (cr+1)*cols+cc+1
-  ];
-
-  stableData = { clusterNodes, clusterEdges, clusterDefs, bNodes1, bNodes2, bEdges1, bEdges2, broker, diffNodes, diffSeeds, diffCols: cols, diffRows: rows };
-}
-
-function initCanvas() {
-  const w = canvas.offsetWidth || canvas.parentElement.offsetWidth || 720;
-  canvas.width  = w;
-  canvas.height = 360;
-  buildStableData(canvas.width, canvas.height);
-  canvasReady = true;
-  if (networkMode === 'diffusion') {
-    startDiffusion();
-  } else {
-    drawNetwork();
-  }
-}
-
-window.addEventListener('resize', () => {
-  if (canvasReady) {
-    canvas.width  = canvas.offsetWidth || canvas.width;
-    canvas.height = 360;
-    buildStableData(canvas.width, canvas.height);
-    if (networkMode !== 'diffusion') drawNetwork();
-  }
-});
-
-const COLORS = {
-  blue: '#4a6fa5',
-  red: '#c0392b',
-  green: '#27ae60',
-  ink: '#0e1623',
-  paper: '#f5f0e8',
-  muted: '#6b7a8d',
-  accent: '#e8c84a'
-};
-
-function setMode(mode, skipButtonUpdate) {
-  networkMode = mode;
-  if (!skipButtonUpdate) {
-    document.querySelectorAll('.ctrl-btn').forEach(b => b.classList.remove('active'));
-    const btn = document.getElementById('btn-' + mode);
-    if (btn) btn.classList.add('active');
-  }
-  // Stop any running diffusion loop
-  diffusionRunning = false;
-  diffusionStep = 0;
-
-  const labels = {
-    clusters:   'Homophily: nodes prefer similar others — driving cluster formation',
-    bridges:    'Structural Holes: the gap between clusters — and the broker who spans it',
-    centrality: 'Centrality: a few hub nodes hold disproportionate influence (power-law distribution)',
-    diffusion:  'Complex Contagion: watch adoption spread via social reinforcement — click ↺ Restart to replay'
-  };
-  const lbl = document.getElementById('canvasLabel');
-  if (lbl) lbl.textContent = labels[mode] || '';
-
-  const rb = document.getElementById('btn-restart');
-  if (rb) rb.style.display = (mode === 'diffusion') ? 'inline-block' : 'none';
-
-  // If canvas not ready yet, the pending networkMode is already stored —
-  // initCanvas will pick it up and call us again.
-  if (!canvasReady) return;
-
-  if (mode === 'diffusion') {
-    startDiffusion();
-  } else {
-    drawNetwork();
-  }
-}
-
-// rAF-based animation — no setInterval, no race conditions
-let diffusionRunning = false;
-let diffusionLastTime = 0;
-const DIFFUSION_INTERVAL_MS = 260; // ms per step
-
-function startDiffusion() {
-  diffusionRunning = false;       // stop any previous loop
-  diffusionStep    = 0;
-  diffusionLastTime = 0;
-  drawNetwork();                  // draw initial state immediately
-
-  diffusionRunning = true;
-  requestAnimationFrame(diffusionLoop);
-}
-
-function diffusionLoop(timestamp) {
-  if (!diffusionRunning) return;  // cancelled
-
-  if (!diffusionLastTime) diffusionLastTime = timestamp;
-  const elapsed = timestamp - diffusionLastTime;
-
-  if (elapsed >= DIFFUSION_INTERVAL_MS) {
-    diffusionLastTime = timestamp;
-    diffusionStep++;
-    drawNetwork();
-    // Stop when fully saturated (drawDiffusion sets a flag via the global)
-    if (diffusionStep >= 60) {
-      diffusionRunning = false;
-      drawNetwork(); // final render to show "complete" label
-      return;
-    }
-  }
-
-  requestAnimationFrame(diffusionLoop);
-}
-
-function restartDiffusion() {
-  if (networkMode === 'diffusion') startDiffusion();
-}
-
-function drawNetwork() {
-  if (!canvasReady) return;
-  const W = canvas.width, H = canvas.height;
-  ctx.clearRect(0, 0, W, H);
-  ctx.fillStyle = '#0e1623';
-  ctx.fillRect(0, 0, W, H);
-
-  if      (networkMode === 'clusters')   drawClusters(W, H);
-  else if (networkMode === 'bridges')    drawBridges(W, H);
-  else if (networkMode === 'centrality') drawCentrality(W, H);
-  else if (networkMode === 'diffusion')  drawDiffusion(W, H);
-}
-
-function drawNode(x, y, r, color, label) {
-  ctx.beginPath();
-  ctx.arc(x, y, r, 0, Math.PI*2);
-  ctx.fillStyle = color;
-  ctx.fill();
-  if (label) {
-    ctx.fillStyle = '#f5f0e8';
-    ctx.font = `bold ${Math.max(9, Math.round(r * 0.75))}px monospace`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(label, x, y);
-  }
-}
-
-function drawEdge(x1, y1, x2, y2, color, w) {
-  ctx.beginPath();
-  ctx.moveTo(x1, y1);
-  ctx.lineTo(x2, y2);
-  ctx.strokeStyle = color || 'rgba(255,255,255,0.12)';
-  ctx.lineWidth = w || 1;
-  ctx.stroke();
-}
-
-function drawClusters(W, H) {
-  const { clusterEdges, clusterNodes, clusterDefs } = stableData;
-  clusterEdges.forEach(e => drawEdge(e.a.x, e.a.y, e.b.x, e.b.y, e.color, 1));
-  clusterNodes.forEach(n => drawNode(n.x, n.y, 7, n.color));
-
-  // Cluster labels
-  clusterDefs.forEach((c, i) => {
-    ctx.fillStyle = c.color + 'aa';
-    ctx.font = '11px monospace';
-    ctx.textAlign = 'center';
-    ctx.fillText(['Cluster A', 'Cluster B', 'Cluster C'][i], c.cx, c.cy + Math.min(W, H) * 0.2);
-  });
-
-  // Annotation
-  ctx.fillStyle = 'rgba(245,240,232,0.35)';
-  ctx.font = '10px monospace';
-  ctx.textAlign = 'center';
-  ctx.fillText('Few inter-cluster ties — homophily keeps nodes within their group', W/2, H - 14);
-}
-
-function drawBridges(W, H) {
-  const { bNodes1, bNodes2, bEdges1, bEdges2, broker } = stableData;
-
-  // Cluster edges
-  bEdges1.forEach(e => drawEdge(e.a.x, e.a.y, e.b.x, e.b.y, COLORS.blue + '44', 1));
-  bEdges2.forEach(e => drawEdge(e.a.x, e.a.y, e.b.x, e.b.y, COLORS.red + '44', 1));
-
-  // Structural hole dashed ellipse
-  ctx.save();
-  ctx.setLineDash([5, 5]);
-  ctx.beginPath();
-  ctx.ellipse(W*0.5, H*0.62, 90, 55, 0, 0, Math.PI*2);
-  ctx.strokeStyle = 'rgba(245,240,232,0.2)';
-  ctx.lineWidth = 1;
-  ctx.stroke();
-  ctx.setLineDash([]);
-  ctx.restore();
-  ctx.fillStyle = 'rgba(245,240,232,0.22)';
-  ctx.font = '9px monospace';
-  ctx.textAlign = 'center';
-  ctx.fillText('STRUCTURAL HOLE', W*0.5, H*0.78);
-
-  // Broker bridges (golden lines)
-  drawEdge(broker.x, broker.y, bNodes1[1].x, bNodes1[1].y, COLORS.accent + 'cc', 2);
-  drawEdge(broker.x, broker.y, bNodes2[5].x, bNodes2[5].y, COLORS.accent + 'cc', 2);
-
-  // Nodes
-  bNodes1.forEach(n => drawNode(n.x, n.y, 7, COLORS.blue));
-  bNodes2.forEach(n => drawNode(n.x, n.y, 7, COLORS.red));
-
-  // Broker glow
-  ctx.beginPath();
-  ctx.arc(broker.x, broker.y, 22, 0, Math.PI*2);
-  ctx.fillStyle = 'rgba(232,200,74,0.18)';
-  ctx.fill();
-  drawNode(broker.x, broker.y, 13, COLORS.accent, 'B');
-
-  ctx.fillStyle = 'rgba(245,240,232,0.55)';
-  ctx.font = '10px monospace';
-  ctx.textAlign = 'center';
-  ctx.fillText('Broker node — bridges the structural hole between clusters', broker.x, broker.y + 30);
-
-  // Cluster labels
-  ctx.fillStyle = COLORS.blue + 'aa';
-  ctx.font = '11px monospace';
-  ctx.textAlign = 'center';
-  ctx.fillText('Cluster A', W*0.24, H*0.88);
-  ctx.fillStyle = COLORS.red + 'aa';
-  ctx.fillText('Cluster B', W*0.76, H*0.88);
-}
-
-function drawCentrality(W, H) {
-  const hub = { x: W/2, y: H/2 };
-  const secondary = [];
-  const peripheral = [];
-  for (let i = 0; i < 5; i++) {
-    const a = (i/5)*Math.PI*2 - Math.PI/2;
-    secondary.push({ x: hub.x + Math.cos(a)*115, y: hub.y + Math.sin(a)*95 });
-  }
-  secondary.forEach((s, si) => {
-    for (let i = 0; i < 3; i++) {
-      const a = ((si/5)*Math.PI*2 - Math.PI/2) + (i-1)*0.55;
-      peripheral.push({ x: s.x + Math.cos(a)*52, y: s.y + Math.sin(a)*52, sec: si });
-    }
-  });
-
-  // Hub glow
-  const grad = ctx.createRadialGradient(hub.x, hub.y, 0, hub.x, hub.y, 85);
-  grad.addColorStop(0, 'rgba(232,200,74,0.28)');
-  grad.addColorStop(1, 'rgba(232,200,74,0)');
-  ctx.fillStyle = grad;
-  ctx.beginPath(); ctx.arc(hub.x, hub.y, 85, 0, Math.PI*2); ctx.fill();
-
-  secondary.forEach(s => drawEdge(hub.x, hub.y, s.x, s.y, 'rgba(232,200,74,0.55)', 1.5));
-  peripheral.forEach(p => drawEdge(secondary[p.sec].x, secondary[p.sec].y, p.x, p.y, 'rgba(255,255,255,0.13)', 1));
-
-  peripheral.forEach(p => drawNode(p.x, p.y, 5, COLORS.muted));
-  secondary.forEach(s => drawNode(s.x, s.y, 10, COLORS.blue));
-  drawNode(hub.x, hub.y, 18, COLORS.accent, 'H');
-
-  ctx.fillStyle = 'rgba(245,240,232,0.4)';
-  ctx.font = '10px monospace';
-  ctx.textAlign = 'center';
-  ctx.fillText('Hub H — high centrality — disproportionate influence (power-law distribution)', hub.x, H - 14);
-}
-
-function drawDiffusion(W, H) {
-  const { diffNodes, diffCols, diffRows } = stableData;
-
-  // Seed: 2×2 block at centre
-  const cr = Math.floor(diffRows / 2), cc = Math.floor(diffCols / 2);
-  const seedIds = new Set([
-    cr       * diffCols + cc,
-    cr       * diffCols + (cc + 1),
-    (cr - 1) * diffCols + cc,
-    (cr - 1) * diffCols + (cc + 1)
-  ]);
-  const adopted = new Set(seedIds);
-
-  // 8-directional neighbours (including diagonals) so threshold=2 can bootstrap.
-  // A node at the corner of the 2×2 seed has 2 adopted diagonal+cardinal neighbours → adopts.
-  const dirs8 = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
-
-  for (let step = 0; step < diffusionStep; step++) {
-    const toAdd = [];
-    diffNodes.forEach(n => {
-      if (adopted.has(n.id)) return;
-      let count = 0;
-      dirs8.forEach(([dr, dc]) => {
-        const nr = n.row + dr, nc = n.col + dc;
-        if (nr >= 0 && nr < diffRows && nc >= 0 && nc < diffCols) {
-          if (adopted.has(nr * diffCols + nc)) count++;
+/* network canvas */
+function net(canvas,opts){
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const dpr=Math.min(window.devicePixelRatio||1,2);
+  const cfg=Object.assign({nodes:80,dist:140,fragmentK:9,nodeC:'rgba(22,22,26,.55)',linkC:'rgba(22,22,26,.10)',accentC:'rgba(216,98,52,.92)',accentL:'rgba(216,98,52,.30)',hubs:6,r:1.6,hr:3.0,speed:.18,mouse:true,mouseT:null},opts||{});
+  let W,H,N=[];
+  function rs(){W=canvas.clientWidth;H=canvas.clientHeight;canvas.width=W*dpr;canvas.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);init()}
+  function init(){N=[];for(let i=0;i<cfg.nodes;i++)N.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*cfg.speed,vy:(Math.random()-.5)*cfg.speed,r:i<cfg.hubs?cfg.hr:cfg.r,h:i<cfg.hubs})}
+  let mx=-1e6,my=-1e6;
+  if(cfg.mouse){const t=cfg.mouseT||canvas.parentElement;t.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect();mx=e.clientX-r.left;my=e.clientY-r.top});t.addEventListener('mouseleave',()=>{mx=-1e6;my=-1e6})}
+  function step(){
+    ctx.clearRect(0,0,W,H);
+    for(let i=0;i<N.length;i++){
+      const a=N[i];let nc=0;
+      for(let j=i+1;j<N.length;j++){
+        const b=N[j],dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy);
+        if(d<cfg.dist){nc++;const f=Math.max(.15,1-nc/cfg.fragmentK);const t=(1-d/cfg.dist)*f;if(t<.04)continue;
+          ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
+          ctx.strokeStyle=(a.h||b.h)?cfg.accentL.replace(/[\d.]+\)$/,(t*.85).toFixed(3)+')'):cfg.linkC.replace(/[\d.]+\)$/,(t*.7).toFixed(3)+')');
+          ctx.lineWidth=.7;ctx.stroke();
         }
-      });
-      if (count >= 2) toAdd.push(n.id); // complex contagion: threshold = 2
-    });
-    toAdd.forEach(id => adopted.add(id));
-    if (toAdd.length === 0) break; // fully saturated
-  }
-
-  // Draw grid edges (4-directional, for visual clarity)
-  diffNodes.forEach(n => {
-    [[0,1],[1,0]].forEach(([dr, dc]) => {
-      const m = diffNodes.find(m => m.row === n.row + dr && m.col === n.col + dc);
-      if (m) drawEdge(n.x, n.y, m.x, m.y, 'rgba(255,255,255,0.09)', 1);
-    });
-  });
-
-  // Draw nodes — seeds gold, adopted green, pending grey
-  diffNodes.forEach(n => {
-    if (seedIds.has(n.id))  drawNode(n.x, n.y, 10, COLORS.accent);
-    else if (adopted.has(n.id)) drawNode(n.x, n.y, 9,  COLORS.green);
-    else                         drawNode(n.x, n.y, 6,  COLORS.muted);
-  });
-
-  const pct = Math.round((adopted.size / diffNodes.length) * 100);
-  ctx.fillStyle = 'rgba(245,240,232,0.5)';
-  ctx.font = '10px monospace'; ctx.textAlign = 'left';
-  ctx.fillText(`Adopted: ${adopted.size} / ${diffNodes.length}  (${pct}%)  —  complex contagion, threshold = 2`, 12, H - 14);
-  ctx.textAlign = 'right';
-  ctx.fillStyle = diffusionRunning ? 'rgba(232,200,74,0.8)' : 'rgba(39,174,96,0.9)';
-  ctx.fillText(diffusionRunning ? 'spreading…' : 'cascade complete ✓', W - 12, H - 14);
-}
-
-// === KNOWLEDGE CHECK ===
-const questions = [
-  {
-    q: "An entrepreneurial ecosystem consists of which of the following?",
-    opts: ["Individual firms acting independently", "A structured web of relationships between actors", "Only startups and venture capital firms", "Communities, institutions, and norms"],
-    correct: [1, 3],
-    feedback: "An entrepreneurial ecosystem is a structured web of relationships between diverse actors — value emerges from interaction. It includes communities, institutions, cultural norms, investors, founders, developers, regulators, and platforms. (Stam, 2015)"
-  },
-  {
-    q: "According to Granovetter (1985), how is economic action best described?",
-    opts: ["Purely rational and individual", "Embedded in social networks", "Determined only by market prices", "Structurally relational"],
-    correct: [1, 3],
-    feedback: "Granovetter argued that economic action is embedded in social networks and structurally relational — it cannot be understood as purely individual rational choice, nor reduced to market prices alone. This is the concept of 'embeddedness'."
-  },
-  {
-    q: "Structural holes (Burt, 1992) primarily describe:",
-    opts: ["Missing bridges between clusters", "Weak technical infrastructure", "Opportunities for brokerage", "Random network failures"],
-    correct: [0, 2],
-    feedback: "Structural holes are gaps between clusters where no connection exists. They represent opportunities for brokerage — actors who span these holes gain access to non-redundant information and competitive advantage."
-  },
-  {
-    q: "Weak ties are important because they:",
-    opts: ["Provide access to novel information", "Increase redundancy within your group", "Support career mobility", "Prevent diffusion of ideas"],
-    correct: [0, 2],
-    feedback: "Weak ties (acquaintances, peripheral contacts) are essential for accessing non-redundant information outside your immediate circle, enabling both innovation and career mobility. Strong ties create support; weak ties create reach. (Granovetter, 1973)"
-  },
-  {
-    q: "Complex contagion requires:",
-    opts: ["Multiple reinforcing signals", "A single influencer to spark adoption", "Threshold dynamics", "Random exposure across the network"],
-    correct: [0, 2],
-    feedback: "Unlike simple contagion (which spreads via single exposure), complex contagion requires multiple reinforcing signals and operates through threshold dynamics. You adopt a behavior when enough peers around you already have. (Centola, 2010)"
-  },
-  {
-    q: "What does homophily primarily refer to in network science?",
-    opts: ["Preference for similar others", "Network fragmentation", "Attraction to highly central nodes", "A driver of clustering"],
-    correct: [0, 3],
-    feedback: "Homophily is the tendency to connect with similar others ('birds of a feather flock together'). It is the primary driver of cluster formation and, when unchecked, of echo chambers and reduced diversity. (McPherson et al., 2001)"
-  },
-  {
-    q: "Cluster over-embeddedness may lead to:",
-    opts: ["Echo chambers", "Reduced perspective diversity", "Unlimited innovation", "Increased structural fragility"],
-    correct: [0, 1, 3],
-    feedback: "Being too embedded in a single cluster creates echo chambers (ideas go unchallenged), reduced perspective diversity (homogeneous viewpoints), and increased structural fragility (vulnerability to shocks). Over-embeddedness limits both creativity and resilience."
-  },
-  {
-    q: "Network resilience increases when systems are:",
-    opts: ["Highly centralized", "Distributed", "Structurally diversified", "Dependent on one hub"],
-    correct: [1, 2],
-    feedback: "Distributed and structurally diversified systems are more resilient. When no single node is critical, the system maintains functionality even when multiple nodes fail. Centralized networks are efficient but fragile — one hub failure can collapse the entire system. (Barabási, 2002)"
-  }
-];
-
-let currentQ = 0;
-let answered = new Array(questions.length).fill(null);
-let pendingSelections = [];
-
-function renderQuestion() {
-  const q = questions[currentQ];
-  document.getElementById('kc-progress').textContent = `${currentQ+1} / ${questions.length}`;
-  const container = document.getElementById('kc-container');
-  const isMulti = q.correct.length > 1;
-  const userAns = answered[currentQ];
-  const revealed = userAns !== null;
-
-  let html = `<div class="kc-question">${q.q}
-    ${isMulti ? '<span style="font-size:0.78rem;color:var(--muted);font-style:italic;display:block;margin-top:4px;">Select all correct answers, then click Check.</span>' : ''}
-  </div>`;
-  html += '<div class="kc-options">';
-  q.opts.forEach((opt, i) => {
-    let cls = '';
-    const isPending = !revealed && pendingSelections.includes(i);
-    if (revealed) {
-      if (q.correct.includes(i)) cls = 'correct';
-      else if (userAns.includes(i) && !q.correct.includes(i)) cls = 'wrong';
+      }
+      if(cfg.mouse){const dm=Math.hypot(a.x-mx,a.y-my);if(dm<180){const t=1-dm/180;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(mx,my);ctx.strokeStyle=cfg.accentL.replace(/[\d.]+\)$/,(t*.5).toFixed(3)+')');ctx.lineWidth=.7;ctx.stroke()}}
+      ctx.beginPath();ctx.arc(a.x,a.y,a.r,0,Math.PI*2);ctx.fillStyle=a.h?cfg.accentC:cfg.nodeC;ctx.fill();
+      a.x+=a.vx;a.y+=a.vy;if(a.x<0||a.x>W)a.vx*=-1;if(a.y<0||a.y>H)a.vy*=-1;
     }
-    const pendingStyle = isPending ? 'border-color:var(--accent);background:var(--glow);' : '';
-    html += `<div class="kc-option ${cls}" onclick="selectOption(${i})" style="${pendingStyle}">
-      <span class="kc-letter">${String.fromCharCode(65+i)}</span>
-      <span>${opt}</span>
-    </div>`;
-  });
-  html += '</div>';
-
-  // Show Check button only for multi-select before answering
-  if (isMulti && !revealed) {
-    html += `<div style="margin-top:14px;">
-      <button onclick="checkMulti()" style="font-family:var(--mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;background:var(--ink);color:var(--paper);border:none;border-radius:3px;cursor:pointer;">Check Answer →</button>
-    </div>`;
+    requestAnimationFrame(step);
   }
-
-  html += `<div class="kc-feedback ${revealed ? 'show' : ''}">${q.feedback}</div>`;
-  container.innerHTML = html;
+  rs();window.addEventListener('resize',rs);step();
 }
-
-function selectOption(i) {
-  if (answered[currentQ] !== null) return;
-  const q = questions[currentQ];
-  if (q.correct.length === 1) {
-    // Single-select: immediate reveal
-    answered[currentQ] = [i];
-    pendingSelections = [];
-    renderQuestion();
-  } else {
-    // Multi-select: toggle selection
-    const idx = pendingSelections.indexOf(i);
-    if (idx > -1) pendingSelections.splice(idx, 1);
-    else pendingSelections.push(i);
-    renderQuestion();
-  }
-}
-
-function checkMulti() {
-  if (answered[currentQ] !== null) return;
-  if (pendingSelections.length === 0) return;
-  answered[currentQ] = [...pendingSelections];
-  pendingSelections = [];
-  renderQuestion();
-}
-
-function nextQuestion() {
-  if (currentQ < questions.length - 1) { currentQ++; pendingSelections = []; renderQuestion(); }
-}
-function prevQuestion() {
-  if (currentQ > 0) { currentQ--; pendingSelections = []; renderQuestion(); }
-}
-
-renderQuestion();
+net(document.getElementById('net'),{nodes:90,dist:150,hubs:7,mouseT:document.getElementById('hero')});
+net(document.getElementById('net2'),{nodes:70,dist:140,hubs:5,nodeC:'rgba(255,255,255,.55)',linkC:'rgba(255,255,255,.18)',accentC:'rgba(216,98,52,.95)',accentL:'rgba(216,98,52,.45)',mouse:false});
+net(document.getElementById('netTalk'),{nodes:55,dist:120,hubs:4,nodeC:'rgba(245,243,238,.6)',linkC:'rgba(245,243,238,.18)',accentC:'rgba(216,98,52,1)',accentL:'rgba(216,98,52,.5)',mouse:false,r:1.4,hr:2.8});
 </script>
 </body>
 </html>
